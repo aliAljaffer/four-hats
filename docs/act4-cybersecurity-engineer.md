@@ -118,7 +118,7 @@ Last resort: [open the solved sqlmap Dockerfile](https://github.com/aliAljaffer/
 
 #### Task 4: Start the port-forward
 
-Keep the port-forward running in its own terminal, for the manual `curl` commands only. It is the same pattern Episode 18 used for Prometheus.
+Keep the port-forward running in its own terminal, for the manual `curl` commands only. It is the same pattern Episode 18 used for Prometheus. If port 8000 is in use, forward to 18000 and use 18000 in the curl URLs.
 
 <details>
 <summary>Show solution</summary>
@@ -157,7 +157,7 @@ Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-
 
 #### Task 6: Read the API with curl
 
-Read the API by hand. Call `healthz`, `readyz`, the task list, and the search endpoint.
+Read the API by hand. Call `healthz`, `readyz`, the task list, and the search endpoint. If you forwarded to 18000, use 18000 in these URLs.
 
 <details>
 <summary>Show solution</summary>
@@ -335,6 +335,8 @@ tasks = connection.execute(
     (f"%{term}%",),
 ).fetchall()
 ```
+
+Remove the `# Intentionally vulnerable to SQL injection; Act 4 finds and fixes this.` comment from `backend/app.py`. The comment is no longer true.
 
 Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
 
@@ -521,6 +523,10 @@ Write a rule in `tools/semgrep/sql-injection.yml` that flags an f-string passed 
 
 <details>
 <summary>Show solution</summary>
+
+```shell
+mkdir -p tools/semgrep
+```
 
 ```yaml
 rules:
@@ -751,16 +757,29 @@ Last resort: [open the solved requirements.txt](https://github.com/aliAljaffer/f
 
 #### Task 25: Add JWT_SECRET
 
-Add `JWT_SECRET` to `.env` and `.env.example`.
+Add `JWT_SECRET` to `.env`, `.env.example`, and the backend service in `compose.yaml`.
 
 <details>
 <summary>Show solution</summary>
+
+`.env` and `.env.example`:
 
 ```text
 JWT_SECRET=change-me-locally-too
 ```
 
-Episode 5 copied `.env` from `.env.example`. If you change only the example, your `.env` does not change.
+The backend service in `compose.yaml`:
+
+```yaml
+    environment:
+      DB_HOST: database
+      DB_NAME: tasks
+      DB_USER: tasks
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+```
+
+Episode 5 copied `.env` from `.env.example`. If you change only the example, your `.env` does not change. Compose reads the variable from `.env` only when the service lists it.
 
 Last resort: [open the solved .env.example](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/.env.example)
 
@@ -802,13 +821,15 @@ Update the `COPY` line in `frontend/Dockerfile`:
 COPY index.html styles.css app.js pentest.html pentest.css pentest.js /usr/share/nginx/html/
 ```
 
-Last resort: [open the solved frontend Dockerfile](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/frontend/Dockerfile)
+Last resort: [open the solved frontend folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer/frontend)
 
 </details>
 
 #### Task 28: Add users and authentication
 
 Add a `users` table, a `tasks.owner_id` column, `POST /api/auth/register` (bcrypt-hashed passwords), and `POST /api/auth/login` (a signed JWT). Require `Authorization: Bearer <token>` on every `/api/tasks*` route. Scope `list`, `create`, and `search` to `owner_id`.
+
+The main task board has no login form. After this task, `http://localhost:8080/` returns 401. Use `http://localhost:8080/pentest` for the authenticated flows. Do not change `frontend/app.js` for this act.
 
 <details>
 <summary>Show solution</summary>
@@ -968,13 +989,50 @@ def search_tasks():
     return jsonify(tasks)
 ```
 
+Update and delete also require the token and filter by owner:
+
+```python
+@app.patch("/api/tasks/<int:task_id>")
+@require_auth
+def update_task(task_id):
+    data = request.get_json(silent=True)
+    done = data.get("done") if isinstance(data, dict) else None
+
+    if not isinstance(done, bool):
+        return jsonify(error="Done must be true or false."), 400
+
+    with connect_to_database() as connection:
+        task = connection.execute(
+            "UPDATE tasks SET done = %s WHERE id = %s AND owner_id = %s RETURNING id, title, done",
+            (done, task_id, g.user_id),
+        ).fetchone()
+
+    if task is None:
+        return jsonify(error="Task not found."), 404
+    return jsonify(task)
+
+
+@app.delete("/api/tasks/<int:task_id>")
+@require_auth
+def delete_task(task_id):
+    with connect_to_database() as connection:
+        task = connection.execute(
+            "DELETE FROM tasks WHERE id = %s AND owner_id = %s RETURNING id, title, done",
+            (task_id, g.user_id),
+        ).fetchone()
+
+    if task is None:
+        return jsonify(error="Task not found."), 404
+    return jsonify(task)
+```
+
 Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
 
 </details>
 
 #### Task 29: Reproduce the IDOR
 
-Start the stack with `docker compose up --build`. Register two users, log in as both, create a task as Alice, and delete it as Bob.
+Start the stack with `docker compose up --build`. Register two users, log in as both, create a task as Alice, and delete it as Bob. If port 8080 is in use, use 18080 in these commands.
 
 <details>
 <summary>Show solution</summary>
@@ -1010,20 +1068,26 @@ Filter `UPDATE` and `DELETE` by `id = %s AND owner_id = %s`. Return `404` for a 
 <summary>Show solution</summary>
 
 ```python
-# Before
+# PATCH before
+"UPDATE tasks SET done = %s WHERE id = %s RETURNING id, title, done", (done, task_id)
+
+# PATCH after
+"UPDATE tasks SET done = %s WHERE id = %s AND owner_id = %s RETURNING id, title, done", (done, task_id, g.user_id)
+
+# DELETE before
 "DELETE FROM tasks WHERE id = %s RETURNING id, title, done", (task_id,)
 
-# After
+# DELETE after
 "DELETE FROM tasks WHERE id = %s AND owner_id = %s RETURNING id, title, done", (task_id, g.user_id)
 ```
 
-Same change on `PATCH`. Rebuild the backend and repeat the attack. Create a new task as Alice. Delete it as Bob. Expected: `status=404`. The task survives.
+Rebuild the backend and repeat the attack. Create a new task as Alice. Delete it as Bob. Expected: `status=404`. The task survives.
 
 ```shell
 docker compose up --build -d backend
 ```
 
-Add `try_files $uri $uri.html $uri/ =404;` to the `location /` block in `frontend/nginx.conf`. Without it, `/pentest` returns `404` and only `/pentest.html` works.
+The starter `frontend/nginx.conf` already maps `/pentest` to `pentest.html` with `try_files $uri $uri.html $uri/ =404;`. Keep that line. Do not remove it.
 
 A live, clickable version of the same attack and fix is at `http://localhost:8080/pentest`, served by the same frontend. It must be opened through `docker compose`, not a static-file previewer like VS Code's Live Server, which has no `/api/` proxy and returns `405` for the register and login requests.
 
@@ -1037,6 +1101,27 @@ Add the test imports, the token helper, the auth header helper, and a test that 
 
 <details>
 <summary>Show solution</summary>
+
+First update the two Act 1 tests to send the auth header:
+
+```python
+def test_delete_task_returns_deleted_task(self):
+    task = {"id": 7, "title": "Write tests", "done": False}
+
+    with patch("app.connect_to_database", return_value=fake_database(task)):
+        response = self.client.delete("/api/tasks/7", headers=auth_header(user_id=42))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.json, task)
+
+def test_delete_missing_task_returns_404(self):
+    with patch("app.connect_to_database", return_value=fake_database(None)):
+        response = self.client.delete("/api/tasks/999", headers=auth_header(user_id=42))
+
+    self.assertEqual(response.status_code, 404)
+```
+
+Then add the imports and helpers:
 
 ```python
 import os
@@ -1086,9 +1171,9 @@ Last resort: [open the solved test_app.py](https://github.com/aliAljaffer/four-h
 
 ## Encrypt secrets for Git (episode 25)
 
-#### Task 32: Delete the hand-made Secrets
+#### Task 32: Delete the hand-made database Secret
 
-Delete the Secrets that you created by hand. Warning: the controller does not overwrite a Secret that it does not manage. The backend Pods fail until you apply the SealedSecrets.
+Delete the hand-made `app-db` Secret. If `app-auth` exists from an earlier run, delete it too. `--ignore-not-found` makes the command safe. Warning: the controller does not overwrite a Secret that it does not manage. The backend Pods fail until you apply the SealedSecrets.
 
 <details>
 <summary>Show solution</summary>

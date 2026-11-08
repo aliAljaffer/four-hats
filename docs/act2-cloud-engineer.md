@@ -256,6 +256,7 @@ Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/fo
 
 Write `infra/cloud-init/vm.yaml`:
 
+- Create the folder first: `mkdir -p infra/cloud-init`.
 - Start the file with `#cloud-config`.
 - Set the host name to `taskboard`.
 - Create the user `student` with sudo rights and your public key.
@@ -263,6 +264,10 @@ Write `infra/cloud-init/vm.yaml`:
 
 <details>
 <summary>Show solution</summary>
+
+```shell
+mkdir -p infra/cloud-init
+```
 
 ```yaml
 #cloud-config
@@ -304,13 +309,13 @@ Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/fo
 
 #### Task 4: Log in with SSH
 
-Log in with SSH. Use the IP address from `multipass list`.
+Log in with SSH. Use the IP address from `multipass list`. Replace `VM_IP` with that address.
 
 <details>
 <summary>Show solution</summary>
 
 ```shell
-ssh student@<vm-ip>
+ssh student@VM_IP
 ```
 
 Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
@@ -335,7 +340,7 @@ sudo apt update
 htop
 ```
 
-Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
+Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
 </details>
 
@@ -359,7 +364,7 @@ rm moved.txt
 rm -r app
 ```
 
-Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
+Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
 </details>
 
@@ -376,7 +381,7 @@ chmod 400 notes.txt
 chmod 755 notes.txt
 ```
 
-Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
+Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
 </details>
 
@@ -394,7 +399,7 @@ echo "another line" >> hello.txt
 cat hello.txt
 ```
 
-Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
+Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
 </details>
 
@@ -410,7 +415,7 @@ export NAME="Task Board"
 echo "Hello, $NAME"
 ```
 
-Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
+Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
 </details>
 
@@ -435,7 +440,7 @@ chmod +x report.sh
 cat report.txt
 ```
 
-Last resort: [open the solved cloud-init file](https://github.com/aliAljaffer/four-hats/blob/solved/act-2-cloud-engineer/infra/cloud-init/vm.yaml)
+Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
 </details>
 
@@ -626,12 +631,12 @@ Last resort: [open the solved playbook](https://github.com/aliAljaffer/four-hats
 
 #### Task 6: Open the app
 
-Open `http://<vm-ip>:8080`. Add a task.
+Open `http://VM_IP:8080`. Add a task.
 
 <details>
 <summary>Show solution</summary>
 
-Open `http://<vm-ip>:8080` in a browser. Add a task. The task appears in the list.
+Open `http://VM_IP:8080` in a browser. Add a task. The task appears in the list.
 
 Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 
@@ -663,7 +668,7 @@ Check that port 8000 is closed. The command must time out.
 <summary>Show solution</summary>
 
 ```shell
-curl -m 3 http://<vm-ip>:8000/api/tasks
+curl -m 3 http://VM_IP:8000/api/tasks
 ```
 
 This only times out because `compose.yaml` never publishes a backend port. Docker writes its own `iptables` rules for a published port, ahead of UFW's rules, so UFW's default-deny policy does not block a container port that is actually published to `0.0.0.0`. If you add one later for debugging, bind it to `127.0.0.1` only.
@@ -708,14 +713,14 @@ Last resort: [open the solved Terraform folder](https://github.com/aliAljaffer/f
 
 #### Task 3: Sign in and enable the API
 
-Sign in. The command opens a browser. Enable the Compute Engine API.
+Sign in. The command opens a browser. Enable the Compute Engine API. Replace `PROJECT_ID` with your project ID.
 
 <details>
 <summary>Show solution</summary>
 
 ```shell
 docker compose -f tools/compose.yaml run --rm gcloud gcloud auth application-default login
-docker compose -f tools/compose.yaml run --rm gcloud gcloud services enable compute.googleapis.com --project <project-id>
+docker compose -f tools/compose.yaml run --rm gcloud gcloud services enable compute.googleapis.com --project PROJECT_ID
 ```
 
 Last resort: [open the solved Terraform folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer/infra/terraform/gcp)
@@ -930,7 +935,7 @@ Open the app URL.
 <details>
 <summary>Show solution</summary>
 
-Open `http://<vm-ip>:8080` in a browser. Add a task.
+Open `http://VM_IP:8080` in a browser. Add a task.
 
 Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-2-cloud-engineer)
 

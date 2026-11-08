@@ -77,6 +77,10 @@ docker pull nginx:1.27-alpine
 
 Later acts add more images. Each act doc lists them.
 
+## Port conflicts
+
+Some steps use host ports 8000 and 8080. If another program uses them, use 18000 and 18080. Change the host port in the command and in the URL. The container port does not change.
+
 ## Run course tools
 
 Course tools run from `tools/compose.yaml`. The command is the same on macOS and Windows:
@@ -94,7 +98,7 @@ This runs the backend tests in a Python container.
 3. Clone your fork:
 
    ```shell
-   git clone https://github.com/<your-username>/four-hats.git
+   git clone https://github.com/YOUR_USERNAME/four-hats.git
    cd four-hats
    ```
 
