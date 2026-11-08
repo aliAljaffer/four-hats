@@ -829,7 +829,7 @@ Last resort: [open the solved frontend folder](https://github.com/aliAljaffer/fo
 
 Add a `users` table, a `tasks.owner_id` column, `POST /api/auth/register` (bcrypt-hashed passwords), and `POST /api/auth/login` (a signed JWT). Require `Authorization: Bearer <token>` on every `/api/tasks*` route. Scope `list`, `create`, and `search` to `owner_id`.
 
-The main task board has no login form. After this task, `http://localhost:8080/` returns 401. Use `http://localhost:8080/pentest` for the authenticated flows. Do not change `frontend/app.js` for this act.
+The main task board has no login form. After this task, the page at `http://localhost:8080/` still loads, but its API calls return 401. Use `http://localhost:8080/pentest` for the authenticated flows. Do not change `frontend/app.js` for this act.
 
 <details>
 <summary>Show solution</summary>

@@ -95,20 +95,20 @@ A fine-grained token cannot read GHCR packages. Use a classic token.
 6. Select **Generate token**.
 7. Copy the token now. GitHub shows it once.
 
-Save the token in an environment variable. Never commit it.
+Save the token in an environment variable. Never commit it. Replace `YOUR_USERNAME` and `YOUR_TOKEN` with your values.
 
 macOS (bash or zsh):
 
 ```shell
-export GHCR_USER=<your-github-username>
-export GHCR_PAT=<paste-token>
+export GHCR_USER=YOUR_USERNAME
+export GHCR_PAT=YOUR_TOKEN
 ```
 
 Windows (PowerShell):
 
 ```powershell
-$env:GHCR_USER = "<your-github-username>"
-$env:GHCR_PAT = "<paste-token>"
+$env:GHCR_USER = "YOUR_USERNAME"
+$env:GHCR_PAT = "YOUR_TOKEN"
 ```
 
 Create the pull Secret in the `app` namespace:
@@ -144,6 +144,8 @@ Expected: all Pods reach `Running`.
 ```shell
 echo $GHCR_PAT | docker login ghcr.io -u $GHCR_USER --password-stdin
 ```
+
+On PowerShell, use `$env:GHCR_PAT` and `$env:GHCR_USER`.
 
 Expected: `Login Succeeded`.
 
@@ -654,7 +656,7 @@ minikube kubectl -- get hpa -n app
 minikube service frontend -n app --url
 ```
 
-Keep `minikube service` running in its own terminal. Press Ctrl+C when you finish. If you need a non-blocking check, use `minikube kubectl -- port-forward service/frontend -n app 8080:80` and open `http://localhost:8080`.
+Keep `minikube service` running in its own terminal. Press Ctrl+C when you finish. If you need a non-blocking check, use `minikube kubectl -- port-forward service/frontend -n app 8080:80` and open `http://localhost:8080`. If port 8080 is in use, use `18080:80` and open `http://localhost:18080`.
 
 Expected: all Pods `Running`, the PVC `Bound`, and the HPA showing a CPU percentage.
 
