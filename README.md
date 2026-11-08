@@ -52,6 +52,8 @@ Install steps are in [Setup](docs/00-setup.md).
 
 Each act has a finished version in the `solved` branch of this repository. On GitHub, open the branch menu and select `solved`. Open the folder for your act, for example `act-1-software-engineer/`, and compare it with your work.
 
+Each act folder is a source snapshot. The Act 3 and Act 4 manifests reference GHCR images. Build the images locally or publish your own before you run them.
+
 ## Project layout
 
 ```text
