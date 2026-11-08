@@ -17,6 +17,8 @@ The course is a YouTube series. This repository is the starter code that you for
 
 Each act is a separate job. Pick the one you want.
 
+Each act guide gives you the task first. Open **Show solution** only for the task you are stuck on. The `solved` branch is the last resort.
+
 - Each act opens with a briefing: what happened before, your task, and what "done" means.
 - Each act ends with a review and a resume checkpoint: the skills you can now add to your CV.
 - To skip ahead, fork the starter repository first. Then copy the previous act's folder from the `solved` branch into your fork. Each act doc says which folder.

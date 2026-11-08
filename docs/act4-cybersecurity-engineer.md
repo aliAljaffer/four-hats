@@ -11,6 +11,8 @@
 | Done when | `sqlmap` finds nothing on the fixed endpoint, a Pod without an allow rule cannot reach the database, Semgrep, Trivy, and ZAP all run clean or with recorded findings, one user can no longer modify another's task, and every secret the app needs is a committed `SealedSecret`. |
 | Start here | Fork the starter repository. Copy `act-3-devops-engineer/` from the `solved` branch into your fork. Keep the starter `tools/` folder. Install Docker Desktop and Minikube. You need a second Minikube profile for the policy check in Episode 22. |
 
+Try each task first. Open **Show solution** for that task only when you are stuck. The last line in each solution links to the `solved` branch. Use that link as a last resort.
+
 ## What a Cybersecurity Engineer does
 
 A Cybersecurity Engineer finds and closes security gaps before someone else finds them first. In a team, you:
@@ -63,6 +65,13 @@ Compare your work with `act-4-cybersecurity-engineer/` in the `solved` branch.
 
 ## Pull the new images
 
+#### Task 1: Pull the course images
+
+Pull the Semgrep, Trivy, ZAP, and LaTeX images.
+
+<details>
+<summary>Show solution</summary>
+
 ```shell
 docker pull semgrep/semgrep
 docker pull aquasec/trivy
@@ -70,22 +79,49 @@ docker pull ghcr.io/zaproxy/zaproxy:stable
 docker pull texlive/texlive
 ```
 
-Load ZAP into the Minikube node as well. The image is about 1.2 GB and can take several minutes to download. The scan Pod must not spend that time pulling it:
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 2: Load ZAP into Minikube
+
+Load ZAP into the Minikube node. The image is about 1.2 GB and can take several minutes to download. The scan Pod must not spend that time pulling it.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube image load ghcr.io/zaproxy/zaproxy:stable
 ```
 
-`sqlmap` has no official image. Build it once, then load it into Minikube, the same way you load the app images in Act 3:
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 3: Build and load sqlmap
+
+`sqlmap` has no official image. Build it once, then load it into Minikube, the same way you load the app images in Act 3.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 docker compose -f tools/compose.yaml build sqlmap
 minikube image load tools-sqlmap:local
 ```
 
+Last resort: [open the solved sqlmap Dockerfile](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/tools/sqlmap/Dockerfile)
+
+</details>
+
 ## Reach the backend directly (episodes 20 to 21)
 
-Keep this running in its own terminal, for the manual `curl` commands only. It is the same pattern Episode 18 used for Prometheus.
+#### Task 4: Start the port-forward
+
+Keep the port-forward running in its own terminal, for the manual `curl` commands only. It is the same pattern Episode 18 used for Prometheus.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- port-forward service/backend -n app 8000:8000
@@ -93,11 +129,38 @@ minikube kubectl -- port-forward service/backend -n app 8000:8000
 
 `sqlmap` and ZAP do not use this port-forward. Both run as Pods inside the cluster. `sqlmap` reaches the backend at `backend.app.svc.cluster.local:8000`, the same Service name Prometheus already scrapes. ZAP reaches the frontend at `frontend.app.svc.cluster.local:80`, because the checks in Episode 23 are response headers, and those come from Nginx.
 
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
 ## Think like an attacker (episode 20)
+
+#### Task 5: Write the scope
 
 Write a one-page scope before you touch the app: the target (`http://localhost:8000`, your own Minikube cluster), what is in scope (the API, the frontend), what is out of scope (anyone else's systems), and when you will stop.
 
-Read the API by hand:
+<details>
+<summary>Show solution</summary>
+
+Use this template:
+
+```text
+Target: http://localhost:8000, my own Minikube cluster
+In scope: the API and the frontend
+Out of scope: any system I do not own
+Stop condition: when I have confirmed or ruled out the SQL injection, or after 30 minutes
+```
+
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 6: Read the API with curl
+
+Read the API by hand. Call `healthz`, `readyz`, the task list, and the search endpoint.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 curl http://localhost:8000/healthz
@@ -106,7 +169,24 @@ curl http://localhost:8000/api/tasks
 curl "http://localhost:8000/api/tasks/search?q=groceries"
 ```
 
-Burp Suite Community Edition is a GUI intercepting proxy. It cannot run headless in a container for this interactive step, so install it on the host, the same way you installed VS Code and Docker Desktop in Episode 1. Point your browser's proxy at Burp, browse the frontend, and build a site map of every request the app makes.
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 7: Map the attack surface with Burp Suite
+
+Install Burp Suite Community Edition on the host. Point your browser's proxy at Burp. Browse the frontend. Build a site map of every request the app makes.
+
+<details>
+<summary>Show solution</summary>
+
+Burp Suite Community Edition is a GUI intercepting proxy. It cannot run headless in a container for this interactive step, so install it on the host, the same way you installed VS Code and Docker Desktop in Episode 1. Set Burp's proxy listener to `127.0.0.1:8080`. Point the browser at it. Open the frontend, create a task, search for it, mark it done, delete it. Open Burp's site map.
+
+The requests to find: `GET /`, `GET /api/tasks`, `POST /api/tasks`, `PATCH /api/tasks/<id>`, and `GET /api/tasks/search`.
+
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
 
 ## Exploit the SQL injection (episode 21)
 
@@ -118,21 +198,29 @@ tasks = connection.execute(
 ).fetchall()
 ```
 
-### Confirm it by hand
+#### Task 8: Confirm the error
 
-A normal search:
+Send a single quote in the `q` parameter. The app's global error handler turns the resulting database error into a 503.
 
-```shell
-curl -G http://localhost:8000/api/tasks/search --data-urlencode "q=groceries"
-```
-
-Break the query with a single quote. The app's global error handler turns the resulting database error into a 503, which is itself a signal: a normal, unmatched search returns `200` with an empty list, not `503`.
+<details>
+<summary>Show solution</summary>
 
 ```shell
 curl -i -G http://localhost:8000/api/tasks/search --data-urlencode "q=groceries'"
 ```
 
-Confirm it with a boolean payload that closes the quoted string and adds a condition that is always true:
+Expected: `HTTP/1.1 503`. A normal, unmatched search returns `200` with an empty list, not `503`.
+
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 9: Confirm with a boolean payload
+
+Confirm the injection with a payload that closes the quoted string and adds a condition that is always true.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 curl -G http://localhost:8000/api/tasks/search --data-urlencode "q=nonexistent' OR '1'='1' --"
@@ -140,7 +228,16 @@ curl -G http://localhost:8000/api/tasks/search --data-urlencode "q=nonexistent' 
 
 Expected: every task comes back, not zero. The search term never matched; the injected condition did.
 
-Extract data with a `UNION` payload. The query selects three columns, so the injected `SELECT` must return three values of compatible types:
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 10: Extract data with UNION
+
+Extract data with a `UNION` payload. The query selects three columns, so the injected `SELECT` must return three values of compatible types.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 curl -G http://localhost:8000/api/tasks/search --data-urlencode "q=nonexistent' UNION SELECT 1, version(), true --"
@@ -148,9 +245,16 @@ curl -G http://localhost:8000/api/tasks/search --data-urlencode "q=nonexistent' 
 
 Expected: one task comes back whose `title` is the PostgreSQL version string, not a task you created.
 
-### Automate it with sqlmap
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
 
-Run `sqlmap` as a Pod in the `app` namespace, targeting the backend's Service name directly:
+</details>
+
+#### Task 11: Automate with sqlmap
+
+Run `sqlmap` as a Pod in the `app` namespace, targeting the backend's Service name directly.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- run sqlmap-scan -n app --image=tools-sqlmap:local --image-pull-policy=Never --labels=app.kubernetes.io/name=scanner --restart=Never -- \
@@ -161,7 +265,16 @@ minikube kubectl -- delete pod sqlmap-scan -n app
 
 Expected: `sqlmap` reports the `q` parameter is injectable: boolean-based blind, stacked queries, time-based blind, and UNION query.
 
-PostgreSQL has no separate "databases" the way MySQL does from one connection. `sqlmap --dbs` lists schemas instead, and the app's tables live in the default `public` schema. List the `tasks` table, then dump it, giving each Pod a new name:
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 12: Dump the tasks table
+
+PostgreSQL has no separate "databases" the way MySQL does from one connection. `sqlmap --dbs` lists schemas instead, and the app's tables live in the default `public` schema. List the `tasks` table, then dump it, giving each Pod a new name.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- run sqlmap-tables -n app --image=tools-sqlmap:local --image-pull-policy=Never --labels=app.kubernetes.io/name=scanner --restart=Never -- \
@@ -176,7 +289,27 @@ minikube kubectl -- delete pod sqlmap-tables sqlmap-dump -n app
 
 Expected: `sqlmap` prints every row of the `tasks` table: `id`, `title`, `done`, `created_at`.
 
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 13: Write the pentest note
+
 Write your findings in a short pentest note: the endpoint, the payload, and what it proved.
+
+<details>
+<summary>Show solution</summary>
+
+```text
+Endpoint: GET /api/tasks/search?q=
+Payload: nonexistent' OR '1'='1' --
+Result: every task returned, so the q parameter controls the WHERE clause
+Next step: parameterize the query and re-test
+```
+
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
 
 ### Common mistakes
 
@@ -189,9 +322,12 @@ Write your findings in a short pentest note: the endpoint, the payload, and what
 
 ## Fix and harden (episode 22)
 
-### Fix the query
+#### Task 14: Fix the query
 
-Replace the f-string with a parameterized query, the same pattern every other endpoint in this backend already uses:
+Replace the f-string with a parameterized query, the same pattern every other endpoint in this backend already uses.
+
+<details>
+<summary>Show solution</summary>
 
 ```python
 tasks = connection.execute(
@@ -200,7 +336,16 @@ tasks = connection.execute(
 ).fetchall()
 ```
 
-Rebuild the backend image. Load the image into Minikube. Restart the Deployment:
+Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
+
+</details>
+
+#### Task 15: Rebuild and verify the fix
+
+Rebuild the backend image. Load the image into Minikube. Restart the Deployment. Re-run the boolean and UNION payloads and the `sqlmap` Pod.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 docker build -t tutorial-backend:local ./backend
@@ -211,7 +356,11 @@ minikube kubectl -- rollout status deployment/backend -n app
 
 Wait for the rollout to finish. Re-run the boolean and UNION `curl` commands from Episode 21. Both must return an empty list. Re-run the `sqlmap` Pod from Episode 21 against the same URL. `sqlmap` must report that the parameter is not injectable. Do not run `sqlmap` through Compose against `host.docker.internal`. `kubectl port-forward` listens on `127.0.0.1` only.
 
-### NetworkPolicies
+Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
+
+</details>
+
+#### Task 16: Add the NetworkPolicies
 
 `kubernetes/app/07-networkpolicy.yaml` already has the default-deny policy for all ingress and egress in `app`. It also has the DNS egress allow rule for `kube-dns` on UDP and TCP port 53. Internal lookups keep working. It also has the `scanner` egress rule for the `sqlmap` and ZAP Pods. Add these allow rules to the same file:
 
@@ -226,9 +375,113 @@ The default-deny policy blocks egress too. A rule on the destination alone is no
 
 Use the labels in the manifests: `app.kubernetes.io/name: frontend`, `app.kubernetes.io/name: backend`, and `app.kubernetes.io/name: postgres`. A label such as `app: frontend` matches no Pod.
 
-### Verify on a second profile
+<details>
+<summary>Show solution</summary>
 
-Run the probe in the cluster that already runs the app. The probe Pod has no allow rule. The default-deny policy blocks its egress:
+Add these policies to `kubernetes/app/07-networkpolicy.yaml`:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: frontend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - port: 80
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 9113
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: backend
+      ports:
+        - port: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: backend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: frontend
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: scanner
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8000
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: postgres
+      ports:
+        - port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: backend
+      ports:
+        - port: 5432
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 9187
+```
+
+Apply the file:
+
+```shell
+minikube kubectl -- apply -n app -f kubernetes/app/07-networkpolicy.yaml
+```
+
+Last resort: [open the solved 07-networkpolicy.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/07-networkpolicy.yaml)
+
+</details>
+
+#### Task 17: Verify the default-deny policy
+
+Run a probe Pod with no allow rule in the cluster that already runs the app. The default-deny policy blocks its egress.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- run probe --image=busybox -n app --rm -i --restart=Never -- wget -qO- --timeout=2 postgres.app.svc.cluster.local:5432
@@ -249,6 +502,10 @@ minikube delete -p act4-check
 minikube start
 ```
 
+Last resort: [open the solved 07-networkpolicy.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/07-networkpolicy.yaml)
+
+</details>
+
 ### Common mistakes
 
 | Symptom | Cause | Fix |
@@ -258,20 +515,51 @@ minikube start
 
 ## Scan and verify (episode 23)
 
-### SAST: Semgrep
+#### Task 18: Write the Semgrep rule
 
-Write a rule in `tools/semgrep/sql-injection.yml` that flags an f-string passed to `.execute(`. Run it against the backend:
+Write a rule in `tools/semgrep/sql-injection.yml` that flags an f-string passed to `.execute(`.
+
+<details>
+<summary>Show solution</summary>
+
+```yaml
+rules:
+  - id: fstring-sql-query
+    languages: [python]
+    severity: ERROR
+    message: Do not build a SQL query with an f-string. Use a parameterized query.
+    patterns:
+      - pattern: $CONN.execute(f"...")
+```
+
+Last resort: [open the solved Semgrep rule](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/tools/semgrep/sql-injection.yml)
+
+</details>
+
+#### Task 19: Run Semgrep
+
+Run Semgrep against the backend. Expected: no findings on the fixed code.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 docker compose -f tools/compose.yaml run --rm semgrep \
   semgrep scan --config tools/semgrep/sql-injection.yml backend/
 ```
 
-Expected: no findings on the fixed code. Temporarily reintroduce the f-string and run it again. Expected: Semgrep flags the line. Revert the change.
+Temporarily reintroduce the f-string and run it again. Semgrep flags the line. Revert the change.
 
-### SCA, IaC, and secrets: Trivy
+Last resort: [open the solved Semgrep rule](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/tools/semgrep/sql-injection.yml)
 
-The `trivy` service mounts your Docker socket, so it can inspect a local image by name without a registry. Build the backend image first; the Act 3 guide builds it, but the episodes do not:
+</details>
+
+#### Task 20: Run Trivy
+
+Run Trivy against the backend image, the Kubernetes manifests, and the repository secrets.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 docker build -t tutorial-backend:local ./backend
@@ -283,22 +571,26 @@ docker compose -f tools/compose.yaml run --rm trivy fs --scanners secret .
 
 Record any findings you do not fix. Not every finding needs a fix today; note why.
 
-### DAST: OWASP ZAP
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
 
-Run ZAP as a Pod in the `app` namespace too, the same reasoning as `sqlmap`: it reaches the app by Service name, with nothing exposed beyond the cluster.
+</details>
 
-The baseline scan is passive. It crawls the pages it can reach and checks response headers and cookies. It does not send injection payloads, so it cannot prove the SQL injection fix. `sqlmap` proved that in Episode 21, and Semgrep now guards the pattern in source code. ZAP adds the HTTP layer around it: the headers Nginx returns to every browser.
+#### Task 21: Run ZAP
 
-Target the frontend. The backend has no page at `/`, and its API responses carry Flask headers, not Nginx headers. A scan of a backend URL says nothing about `frontend/nginx.conf`. The frontend serves the HTML pages, so ZAP has a real site to crawl and the header findings come from the right server.
+Run ZAP as a Pod in the `app` namespace. Target the frontend.
 
-Load the rules file as a ConfigMap, then run the scan:
+<details>
+<summary>Show solution</summary>
+
+Load the rules file as a ConfigMap:
 
 ```shell
 minikube kubectl -- create configmap zap-rules -n app --from-file=rules.tsv=tools/zap/rules.tsv
 ```
 
+Create `zap-scan-pod.yaml`:
+
 ```yaml
-# zap-scan-pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -332,6 +624,8 @@ spec:
       emptyDir: {}
 ```
 
+Apply and run it:
+
 ```shell
 minikube kubectl -- apply -f zap-scan-pod.yaml
 minikube kubectl -- wait --for=jsonpath='{.status.phase}'=Succeeded pod/zap-scan -n app --timeout=300s
@@ -349,13 +643,29 @@ The Pod carries the label `app.kubernetes.io/name: scanner`. The `scanner` Netwo
 
 Expected before the header fix: the log lists `Missing Anti-clickjacking Header`, `X-Content-Type-Options Header Missing`, `Content Security Policy (CSP) Header Not Set`, `Permissions Policy Header Not Set`, and the Nginx version leak. The rules file silences two informational findings only: cacheable content and modern web application.
 
-### Write the security workflow
+Last resort: [open the solved zap-scan-pod.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/zap-scan-pod.yaml)
 
-Add `.github/workflows/security.yml`. On every pull request, run Semgrep and Trivy. Use your own rule file, `tools/semgrep/sql-injection.yml`, in the Semgrep job. Semgrep's registry rules may not catch this exact pattern. Keep ZAP as a manual, documented step by default. The solved reference also has an optional DAST job. That job starts the Compose stack on the runner and then runs ZAP.
+</details>
 
-### Nginx headers
+#### Task 22: Write the security workflow
 
-Add these lines to the `server` block in `frontend/nginx.conf`:
+Add `.github/workflows/security.yml`. On every pull request, run Semgrep and Trivy. Use your own rule file, `tools/semgrep/sql-injection.yml`, in the Semgrep job. Keep ZAP as a manual, documented step by default.
+
+<details>
+<summary>Show solution</summary>
+
+Create `.github/workflows/security.yml` with a Semgrep job and a Trivy job. The solved reference has both jobs. It also has an optional DAST job that starts the Compose stack and runs ZAP.
+
+Last resort: [open the solved security workflow](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/.github/workflows/security.yml)
+
+</details>
+
+#### Task 23: Add the Nginx headers
+
+Add the security headers to the `server` block in `frontend/nginx.conf`.
+
+<details>
+<summary>Show solution</summary>
 
 ```nginx
 server_tokens off;
@@ -375,24 +685,265 @@ minikube kubectl -- rollout restart deployment/frontend -n app
 minikube kubectl -- rollout status deployment/frontend -n app
 ```
 
-Re-run the same ZAP Pod.
+Re-run the same ZAP Pod. Expected: the anti-clickjacking, `X-Content-Type-Options`, CSP, Permissions Policy, and version leak findings disappear. One Low finding remains, `Cross-Origin-*-Policy Header Missing or Invalid` (90004). Record it and leave it: those policies need every cross-origin resource to cooperate, and this app loads none. Keep the `base-uri`, `form-action`, and `object-src` CSP fallbacks. Without them ZAP raises `CSP: Failure to Define Directive with No Fallback` (10055).
 
-Expected: the anti-clickjacking, `X-Content-Type-Options`, CSP, Permissions Policy, and version leak findings disappear. One Low finding remains, `Cross-Origin-*-Policy Header Missing or Invalid` (90004). Record it and leave it: those policies need every cross-origin resource to cooperate, and this app loads none. Keep the `base-uri`, `form-action`, and `object-src` CSP fallbacks. Without them ZAP raises `CSP: Failure to Define Directive with No Fallback` (10055).
+Last resort: [open the solved nginx.conf](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/frontend/nginx.conf)
+
+</details>
 
 ## Broken access control (episode 24)
 
-Before you start, do four things:
+#### Task 24: Add the Python packages
 
-1. Add `bcrypt>=4.2,<5` and `PyJWT>=2.9,<3` to `backend/requirements.txt`.
-2. Add `JWT_SECRET` to `.env` and `.env.example`.
-3. Reset the database volume. Warning: this deletes all data in your local database. Run `docker compose down -v`. PostgreSQL runs `init.sql` only on an empty data directory.
-4. Copy `pentest.html`, `pentest.css`, and `pentest.js` into `frontend/`. Add the three files to the `COPY` line in `frontend/Dockerfile`.
+Add `bcrypt>=4.2,<5` and `PyJWT>=2.9,<3` to `backend/requirements.txt`.
 
-Then add a `users` table, a `tasks.owner_id` column, `POST /api/auth/register` (bcrypt-hashed passwords), and `POST /api/auth/login` (a signed JWT). Require `Authorization: Bearer <token>` on every `/api/tasks*` route. Scope `list`, `create`, and `search` to `owner_id`.
+<details>
+<summary>Show solution</summary>
 
-Reproduce the IDOR with two real users and `docker compose up --build`. The blocks use bash. On Windows PowerShell 5.1, use `curl.exe`. Set variables with `$env:ALICE_TOKEN = ...`. Use `python` if `python3` is not on PATH.
+```text
+bcrypt>=4.2,<5
+PyJWT>=2.9,<3
+```
+
+Last resort: [open the solved requirements.txt](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/requirements.txt)
+
+</details>
+
+#### Task 25: Add JWT_SECRET
+
+Add `JWT_SECRET` to `.env` and `.env.example`.
+
+<details>
+<summary>Show solution</summary>
+
+```text
+JWT_SECRET=change-me-locally-too
+```
+
+Episode 5 copied `.env` from `.env.example`. If you change only the example, your `.env` does not change.
+
+Last resort: [open the solved .env.example](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/.env.example)
+
+</details>
+
+#### Task 26: Reset the database volume
+
+Reset the database volume. Warning: this deletes all data in your local database.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
+docker compose down -v
+```
+
+PostgreSQL runs `init.sql` only on an empty data directory. `docker compose up --build` alone keeps the old schema. The `users` table and the `owner_id` column do not appear.
+
+Last resort: [open the solved init.sql](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/database/init.sql)
+
+</details>
+
+#### Task 27: Add the pentest page
+
+Copy `pentest.html`, `pentest.css`, and `pentest.js` into `frontend/`. Add the three files to the `COPY` line in `frontend/Dockerfile`.
+
+<details>
+<summary>Show solution</summary>
+
+Copy the three files from the solved branch:
+
+- [pentest.html](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/frontend/pentest.html)
+- [pentest.css](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/frontend/pentest.css)
+- [pentest.js](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/frontend/pentest.js)
+
+Update the `COPY` line in `frontend/Dockerfile`:
+
+```dockerfile
+COPY index.html styles.css app.js pentest.html pentest.css pentest.js /usr/share/nginx/html/
+```
+
+Last resort: [open the solved frontend Dockerfile](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/frontend/Dockerfile)
+
+</details>
+
+#### Task 28: Add users and authentication
+
+Add a `users` table, a `tasks.owner_id` column, `POST /api/auth/register` (bcrypt-hashed passwords), and `POST /api/auth/login` (a signed JWT). Require `Authorization: Bearer <token>` on every `/api/tasks*` route. Scope `list`, `create`, and `search` to `owner_id`.
+
+<details>
+<summary>Show solution</summary>
+
+`database/init.sql`:
+
+```sql
+CREATE TABLE users (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username varchar(32) NOT NULL UNIQUE,
+    password_hash text NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE tasks (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    owner_id integer NOT NULL REFERENCES users (id),
+    title varchar(120) NOT NULL,
+    done boolean NOT NULL DEFAULT false,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+```
+
+`backend/app.py`, the imports and constants:
+
+```python
+import bcrypt
+import jwt
+from datetime import datetime, timedelta, timezone
+from functools import wraps
+
+JWT_ALGORITHM = "HS256"
+TOKEN_LIFETIME = timedelta(hours=24)
+
+
+def get_jwt_secret():
+    return os.environ["JWT_SECRET"]
+```
+
+The auth decorator:
+
+```python
+def require_auth(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        header = request.headers.get("Authorization", "")
+        if not header.startswith("Bearer "):
+            return jsonify(error="Authentication required."), 401
+
+        try:
+            payload = jwt.decode(
+                header.removeprefix("Bearer "), get_jwt_secret(), algorithms=[JWT_ALGORITHM]
+            )
+        except jwt.InvalidTokenError:
+            return jsonify(error="Invalid or expired token."), 401
+
+        g.user_id = int(payload["sub"])
+        return view(*args, **kwargs)
+
+    return wrapped
+```
+
+Registration:
+
+```python
+@app.post("/api/auth/register")
+def register():
+    data = request.get_json(silent=True)
+    username = data.get("username") if isinstance(data, dict) else None
+    password = data.get("password") if isinstance(data, dict) else None
+
+    if not isinstance(username, str) or not 3 <= len(username) <= 32:
+        return jsonify(error="Username must contain 3 to 32 characters."), 400
+    if not isinstance(password, str) or len(password) < 8:
+        return jsonify(error="Password must contain at least 8 characters."), 400
+
+    password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+    try:
+        with connect_to_database() as connection:
+            user = connection.execute(
+                "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING id, username",
+                (username, password_hash),
+            ).fetchone()
+    except psycopg.errors.UniqueViolation:
+        return jsonify(error="Username is already taken."), 409
+    return jsonify(user), 201
+```
+
+Login:
+
+```python
+@app.post("/api/auth/login")
+def login():
+    data = request.get_json(silent=True)
+    username = data.get("username") if isinstance(data, dict) else None
+    password = data.get("password") if isinstance(data, dict) else None
+
+    if not isinstance(username, str) or not isinstance(password, str):
+        return jsonify(error="Username and password are required."), 400
+
+    with connect_to_database() as connection:
+        user = connection.execute(
+            "SELECT id, password_hash FROM users WHERE username = %s", (username,)
+        ).fetchone()
+
+    if user is None or not bcrypt.checkpw(password.encode(), user["password_hash"].encode()):
+        return jsonify(error="Invalid username or password."), 401
+
+    expires_at = datetime.now(timezone.utc) + TOKEN_LIFETIME
+    token = jwt.encode(
+        {"sub": str(user["id"]), "exp": expires_at}, get_jwt_secret(), algorithm=JWT_ALGORITHM
+    )
+    return jsonify(token=token)
+```
+
+List, create, and search use `g.user_id`:
+
+```python
+@app.get("/api/tasks")
+@require_auth
+def list_tasks():
+    with connect_to_database() as connection:
+        tasks = connection.execute(
+            "SELECT id, title, done FROM tasks WHERE owner_id = %s ORDER BY id DESC",
+            (g.user_id,),
+        ).fetchall()
+    return jsonify(tasks)
+
+
+@app.post("/api/tasks")
+@require_auth
+def create_task():
+    data = request.get_json(silent=True)
+    title = data.get("title") if isinstance(data, dict) else None
+
+    if not isinstance(title, str) or not title.strip() or len(title.strip()) > 120:
+        return jsonify(error="Title must contain 1 to 120 characters."), 400
+
+    with connect_to_database() as connection:
+        task = connection.execute(
+            "INSERT INTO tasks (title, owner_id) VALUES (%s, %s) RETURNING id, title, done",
+            (title.strip(), g.user_id),
+        ).fetchone()
+    return jsonify(task), 201
+
+
+@app.get("/api/tasks/search")
+@require_auth
+def search_tasks():
+    term = request.args.get("q", "")
+    with connect_to_database() as connection:
+        tasks = connection.execute(
+            "SELECT id, title, done FROM tasks WHERE owner_id = %s AND title LIKE %s ORDER BY id DESC",
+            (g.user_id, f"%{term}%"),
+        ).fetchall()
+    return jsonify(tasks)
+```
+
+Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
+
+</details>
+
+#### Task 29: Reproduce the IDOR
+
+Start the stack with `docker compose up --build`. Register two users, log in as both, create a task as Alice, and delete it as Bob.
+
+<details>
+<summary>Show solution</summary>
+
+The blocks use bash. On Windows PowerShell 5.1, use `curl.exe`. Set variables with `$env:ALICE_TOKEN = ...`. Use `python` if `python3` is not on PATH.
+
+```shell
+docker compose up --build -d
+
 curl -s -XPOST -H 'Content-Type: application/json' -d '{"username":"alice","password":"correct-horse-batt"}' localhost:8080/api/auth/register
 curl -s -XPOST -H 'Content-Type: application/json' -d '{"username":"bob","password":"correct-horse-batt"}' localhost:8080/api/auth/register
 
@@ -407,11 +958,83 @@ curl -s -o /dev/null -w "status=%{http_code}\n" -XDELETE -H "Authorization: Bear
 
 Expected: `status=200`. Bob deleted Alice's task using only his own valid token. Use the task ID from the response. Do not assume the ID is 1.
 
-Fix: filter `UPDATE` and `DELETE` by `id = %s AND owner_id = %s`. Return `404` for a task that exists but belongs to someone else. Do not return `403`. A `403` confirms that the task exists. Create a new task as Alice. Delete it as Bob. Expected: `status=404`. The task survives.
+Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
+
+</details>
+
+#### Task 30: Fix the IDOR
+
+Filter `UPDATE` and `DELETE` by `id = %s AND owner_id = %s`. Return `404` for a task that exists but belongs to someone else. Do not return `403`.
+
+<details>
+<summary>Show solution</summary>
+
+```python
+# Before
+"DELETE FROM tasks WHERE id = %s RETURNING id, title, done", (task_id,)
+
+# After
+"DELETE FROM tasks WHERE id = %s AND owner_id = %s RETURNING id, title, done", (task_id, g.user_id)
+```
+
+Same change on `PATCH`. Rebuild the backend and repeat the attack. Create a new task as Alice. Delete it as Bob. Expected: `status=404`. The task survives.
+
+```shell
+docker compose up --build -d backend
+```
 
 Add `try_files $uri $uri.html $uri/ =404;` to the `location /` block in `frontend/nginx.conf`. Without it, `/pentest` returns `404` and only `/pentest.html` works.
 
 A live, clickable version of the same attack and fix is at `http://localhost:8080/pentest`, served by the same frontend. It must be opened through `docker compose`, not a static-file previewer like VS Code's Live Server, which has no `/api/` proxy and returns `405` for the register and login requests.
+
+Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
+
+</details>
+
+#### Task 31: Write the regression test
+
+Add the test imports, the token helper, the auth header helper, and a test that checks the SQL and its parameters.
+
+<details>
+<summary>Show solution</summary>
+
+```python
+import os
+from unittest.mock import MagicMock, patch
+
+os.environ.setdefault("JWT_SECRET", "test-secret-at-least-32-bytes-long")
+
+import jwt
+
+from app import JWT_ALGORITHM, get_jwt_secret
+
+
+def make_token(user_id):
+    return jwt.encode({"sub": str(user_id)}, get_jwt_secret(), algorithm=JWT_ALGORITHM)
+
+
+def auth_header(user_id):
+    return {"Authorization": f"Bearer {make_token(user_id)}"}
+```
+
+```python
+@patch("app.connect_to_database")
+def test_delete_task_is_scoped_to_the_caller(self, mock_connect_to_database):
+    mock_connection = MagicMock()
+    mock_connection.execute.return_value.fetchone.return_value = None
+    mock_connect_to_database.return_value.__enter__.return_value = mock_connection
+
+    response = self.client.delete("/api/tasks/1", headers=auth_header(user_id=42))
+
+    self.assertEqual(response.status_code, 404)
+    sql, params = mock_connection.execute.call_args.args
+    self.assertIn("owner_id", sql)
+    self.assertEqual(params, (1, 42))
+```
+
+Last resort: [open the solved test_app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/test_app.py)
+
+</details>
 
 ### Common mistakes
 
@@ -423,40 +1046,105 @@ A live, clickable version of the same attack and fix is at `http://localhost:808
 
 ## Encrypt secrets for Git (episode 25)
 
-Since Episode 13, `app-db` has been created by hand and kept out of Git, because a plain Kubernetes Secret only base64-encodes its value. Episode 25 adds a second one, `app-auth` (the JWT signing key), with the same problem. Sealed Secrets closes this gap. Keep the database username from Episode 13 (`tutorial`) in the sealed Secret. A different username creates a role that PostgreSQL does not have.
+#### Task 32: Delete the hand-made Secrets
 
-Warning: Delete the Secrets that you created by hand. The controller does not overwrite a Secret that it does not manage. The backend Pods fail until you apply the SealedSecrets.
+Delete the Secrets that you created by hand. Warning: the controller does not overwrite a Secret that it does not manage. The backend Pods fail until you apply the SealedSecrets.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- delete secret app-db app-auth -n app --ignore-not-found
+```
+
+Last resort: [open the solved 08-sealed-secrets.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/08-sealed-secrets.yaml)
+
+</details>
+
+#### Task 33: Install the controller
+
+Install the Sealed Secrets controller and fetch its public certificate.
+
+<details>
+<summary>Show solution</summary>
+
+```shell
 minikube kubectl -- apply -f kubernetes/sealed-secrets/controller.yaml
 minikube kubectl -- -n kube-system rollout status deploy/sealed-secrets-controller
 
 minikube kubectl -- get secret -n kube-system \
   -l sealedsecrets.bitnami.com/sealed-secrets-key \
   -o jsonpath='{.items[0].data.tls\.crt}' | base64 -d > kubernetes/sealed-secrets/pub-cert.pem
+```
 
+Last resort: [open the solved controller.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/sealed-secrets/controller.yaml)
+
+</details>
+
+#### Task 34: Seal app-db
+
+Seal `app-db` with the username `tutorial` and a random password. Keep the username from Episode 13. A different username creates a role that PostgreSQL does not have.
+
+<details>
+<summary>Show solution</summary>
+
+```shell
 minikube kubectl -- create secret generic app-db -n app \
   --from-literal=username=tutorial --from-literal=password="$(openssl rand -hex 16)" \
   --dry-run=client -o yaml \
   | docker compose -f tools/compose.yaml run --rm -T kubeseal \
       --cert kubernetes/sealed-secrets/pub-cert.pem --format yaml \
   > kubernetes/app/08-sealed-secrets.yaml
+```
 
+Last resort: [open the solved 08-sealed-secrets.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/08-sealed-secrets.yaml)
+
+</details>
+
+#### Task 35: Seal app-auth
+
+Seal `app-auth`, the JWT signing key.
+
+<details>
+<summary>Show solution</summary>
+
+```shell
 minikube kubectl -- create secret generic app-auth -n app \
   --from-literal=jwt-secret="$(openssl rand -hex 32)" \
   --dry-run=client -o yaml \
   | docker compose -f tools/compose.yaml run --rm -T kubeseal \
       --cert kubernetes/sealed-secrets/pub-cert.pem --format yaml \
   >> kubernetes/app/08-sealed-secrets.yaml
+```
 
+Last resort: [open the solved 08-sealed-secrets.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/08-sealed-secrets.yaml)
+
+</details>
+
+#### Task 36: Apply and verify the SealedSecrets
+
+Apply the SealedSecrets. Verify that the controller decrypts both into ordinary Secrets in `app`.
+
+<details>
+<summary>Show solution</summary>
+
+```shell
 minikube kubectl -- apply -f kubernetes/app/08-sealed-secrets.yaml
 minikube kubectl -- get secrets -n app
 ```
 
 Expected: the controller decrypts both `SealedSecret` objects into ordinary Secrets in `app`. `kubernetes/app/08-sealed-secrets.yaml` is safe to commit. Only the cluster that generated the keypair can unseal it.
 
+Last resort: [open the solved 08-sealed-secrets.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/08-sealed-secrets.yaml)
+
+</details>
+
+#### Task 37: Reset the PostgreSQL volume
+
 The sealed `app-db` uses a new random password. The existing PostgreSQL volume still has the old password. Delete the volume so PostgreSQL initializes with the new password. Warning: this deletes the database data.
+
+<details>
+<summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- scale statefulset postgres -n app --replicas=0
@@ -464,7 +1152,28 @@ minikube kubectl -- delete pvc postgres-data-postgres-0 -n app
 minikube kubectl -- scale statefulset postgres -n app --replicas=1
 ```
 
-Wire `JWT_SECRET` into the backend Deployment from `app-auth`, the same way `DB_PASSWORD` already reads from `app-db`. Restart the backend Deployment so it reads the new Secret values:
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
+
+#### Task 38: Wire JWT_SECRET and restart the backend
+
+Wire `JWT_SECRET` into the backend Deployment from `app-auth`, the same way `DB_PASSWORD` already reads from `app-db`. Restart the backend Deployment so it reads the new Secret values.
+
+<details>
+<summary>Show solution</summary>
+
+Add this to the backend container `env` in `kubernetes/app/04-deployments.yaml`:
+
+```yaml
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-auth
+                  key: jwt-secret
+```
+
+Restart the Deployment:
 
 ```shell
 minikube kubectl -- rollout restart deployment/backend -n app
@@ -472,6 +1181,10 @@ minikube kubectl -- rollout status deployment/backend -n app
 ```
 
 Commit `kubernetes/app/08-sealed-secrets.yaml`; ArgoCD's `app` Application already points at the whole folder.
+
+Last resort: [open the solved 04-deployments.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/kubernetes/app/04-deployments.yaml)
+
+</details>
 
 ### Common mistakes
 
@@ -485,12 +1198,23 @@ Commit `kubernetes/app/08-sealed-secrets.yaml`; ArgoCD's `app` Application alrea
 
 ## Clean up
 
+#### Task 39: Clean up
+
+Remove the Compose stack and the Minikube cluster.
+
+<details>
+<summary>Show solution</summary>
+
 ```shell
 docker compose down -v
 minikube delete
 ```
 
 The first command removes the Compose stack from Episode 24 and its database volume. The second command removes the Minikube cluster.
+
+Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
+
+</details>
 
 ## Act review
 
