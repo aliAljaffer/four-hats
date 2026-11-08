@@ -17,6 +17,8 @@ The course is a YouTube series. This repository is the starter code that you for
 
 Each act is a separate job. Pick the one you want.
 
+Act guides: [Act 1](docs/act1-software-engineer.md), [Act 2](docs/act2-cloud-engineer.md), [Act 3](docs/act3-devops-engineer.md), [Act 4](docs/act4-cybersecurity-engineer.md).
+
 Each act guide gives you the task first. Open **Show solution** only for the task you are stuck on. The `solved` branch is the last resort.
 
 - Each act opens with a briefing: what happened before, your task, and what "done" means.
