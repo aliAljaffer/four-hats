@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zap-scan
+  namespace: app
+  labels:
+    app.kubernetes.io/name: scanner
+spec:
+  restartPolicy: Never
+  containers:
+    - name: zap
+      image: ghcr.io/zaproxy/zaproxy:stable
+      imagePullPolicy: IfNotPresent
+      command:
+        - zap-baseline.py
+        - -I
+        - -t
+        - "http://frontend.app.svc.cluster.local/"
+        - -c
+        - /zap/rules/rules.tsv
+      volumeMounts:
+        - name: rules
+          mountPath: /zap/rules
+        - name: wrk
+          mountPath: /zap/wrk
+  volumes:
+    - name: rules
+      configMap:
+        name: zap-rules
+    - name: wrk
+      emptyDir: {}

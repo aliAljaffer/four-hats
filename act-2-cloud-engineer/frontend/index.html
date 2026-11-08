@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Board</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="board">
+      <header>
+        <p class="eyebrow">Kubernetes tutorial app</p>
+        <h1>Task Board</h1>
+        <p class="intro">Add a task, then mark it done when you finish.</p>
+      </header>
+
+      <form id="task-form">
+        <label for="task-title">New task</label>
+        <div class="form-row">
+          <input id="task-title" name="title" maxlength="120" required>
+          <button type="submit">Add task</button>
+        </div>
+      </form>
+
+      <p id="status" role="status" aria-live="polite"></p>
+      <ul id="task-list" aria-label="Tasks"></ul>
+    </main>
+  </body>
+</html>

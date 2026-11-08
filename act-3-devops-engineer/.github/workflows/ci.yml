@@ -1,0 +1,24 @@
+name: CI (Act 3)
+
+on:
+  pull_request:
+    paths:
+      - act-3-devops-engineer/**
+  push:
+    branches:
+      - main
+    paths:
+      - act-3-devops-engineer/**
+
+permissions:
+  contents: read
+
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          docker run --rm -v "$PWD/act-3-devops-engineer:/w" ghcr.io/yannh/kubeconform:latest-alpine -strict -ignore-missing-schemas -summary /w/kubernetes
+      - run: |
+          docker run --rm -v "$PWD/act-3-devops-engineer:/w" registry.k8s.io/kustomize/kustomize:v5.4.3 build /w/observability > /dev/null

@@ -1,0 +1,15 @@
+#cloud-config
+hostname: taskboard
+users:
+  - name: student
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - REPLACE_WITH_YOUR_PUBLIC_KEY
+package_update: true
+packages:
+  - curl
+  - git
+  - htop
+timezone: UTC

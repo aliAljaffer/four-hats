@@ -1,0 +1,30 @@
+# Usage: docker compose -f tools/compose.yaml run --rm <service> [command]
+services:
+  python-test:
+    image: python:3.12-slim
+    working_dir: /repo/backend
+    volumes:
+      - ..:/repo
+    command: sh -c "pip install --quiet --root-user-action=ignore -r requirements.txt && python -m unittest -v"
+
+  ansible:
+    build: ./ansible
+    volumes:
+      - ..:/repo
+      - ${HOME}/.ssh:/root/.ssh-host:ro
+    entrypoint: ["sh", "-c", "mkdir -p /root/.ssh && cp /root/.ssh-host/id_ed25519* /root/.ssh/ && chmod 600 /root/.ssh/id_ed25519 && exec \"$@\"", "--"]
+    command: ansible --version
+
+  terraform:
+    image: hashicorp/terraform:1.9
+    working_dir: /repo/infra/terraform/gcp
+    volumes:
+      - ..:/repo
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/.config/gcloud/application_default_credentials.json
+
+  gcloud:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:stable
+    volumes:
+      - ${HOME}/.config/gcloud:/root/.config/gcloud

@@ -1,0 +1,8 @@
+# Usage: docker compose -f tools/compose.yaml run --rm <service> [command]
+services:
+  python-test:
+    image: python:3.12-slim
+    working_dir: /repo/backend
+    volumes:
+      - ..:/repo
+    command: sh -c "pip install --quiet --root-user-action=ignore -r requirements.txt && python -m unittest -v"

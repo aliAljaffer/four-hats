@@ -1,0 +1,78 @@
+- name: Deploy the task board
+  hosts: taskboard
+  become: true
+  vars:
+    app_dir: /opt/taskboard
+    db_password: "{{ lookup('ansible.builtin.env', 'DB_PASSWORD') }}"
+  tasks:
+    - name: Install Docker and Compose
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - docker-compose-v2
+          - ufw
+          - rsync
+        state: present
+        update_cache: true
+
+    - name: Start Docker at boot
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add the login user to the docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+
+    - name: Allow SSH
+      community.general.ufw:
+        rule: allow
+        port: "22"
+        proto: tcp
+
+    - name: Allow the web port
+      community.general.ufw:
+        rule: allow
+        port: "8080"
+        proto: tcp
+
+    - name: Turn the firewall on
+      community.general.ufw:
+        state: enabled
+        policy: deny
+
+    - name: Create the app directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        mode: "0755"
+
+    - name: Copy the app
+      become: false
+      ansible.posix.synchronize:
+        src: /repo/
+        dest: "{{ app_dir }}/"
+        recursive: true
+        delete: false
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=infra"
+          - "--exclude=.env"
+          - "--exclude=__pycache__"
+
+    - name: Write the environment file
+      ansible.builtin.copy:
+        dest: "{{ app_dir }}/.env"
+        content: "DB_PASSWORD={{ db_password }}\n"
+        mode: "0600"
+      no_log: true
+
+    - name: Start the stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ app_dir }}"
+        build: policy
+        state: present

@@ -1,0 +1,4 @@
+# ZAP baseline rule config. Format: <rule id><TAB><action><TAB>(comment)
+# Unlisted rules use ZAP's default action.
+10049	IGNORE	(Storable and cacheable content: static assets are meant to be cached)
+10109	IGNORE	(Modern web application: informational only, no action for this app)

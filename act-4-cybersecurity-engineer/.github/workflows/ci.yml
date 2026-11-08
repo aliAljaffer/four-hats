@@ -1,0 +1,24 @@
+name: CI (Act 4)
+
+on:
+  pull_request:
+    paths:
+      - act-4-cybersecurity-engineer/**
+  push:
+    branches:
+      - main
+    paths:
+      - act-4-cybersecurity-engineer/**
+
+permissions:
+  contents: read
+
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: |
+          docker run --rm -v "$PWD/act-4-cybersecurity-engineer:/w" ghcr.io/yannh/kubeconform:latest-alpine -strict -ignore-missing-schemas -summary /w/kubernetes
+      - run: |
+          docker run --rm -v "$PWD/act-4-cybersecurity-engineer:/w" registry.k8s.io/kustomize/kustomize:v5.4.3 build /w/observability > /dev/null

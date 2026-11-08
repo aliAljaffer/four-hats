@@ -1,0 +1,7 @@
+rules:
+  - id: fstring-sql-query
+    languages: [python]
+    severity: ERROR
+    message: Do not build a SQL query with an f-string. Use a parameterized query.
+    patterns:
+      - pattern: $CONN.execute(f"...")

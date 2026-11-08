@@ -1,0 +1,64 @@
+name: Security (Act 4)
+
+on:
+  pull_request:
+    paths:
+      - act-4-cybersecurity-engineer/**
+  push:
+    branches:
+      - main
+    paths:
+      - act-4-cybersecurity-engineer/**
+
+permissions:
+  contents: read
+
+env:
+  ACT: act-4-cybersecurity-engineer
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: |
+          docker run --rm -v "$PWD/${ACT}:/src" semgrep/semgrep semgrep scan --config p/python --config p/javascript --config p/dockerfile --config /src/tools/semgrep/sql-injection.yml --error /src/backend /src/frontend
+
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Scan config and secrets
+        run: |
+          docker run --rm -v "$PWD/${ACT}:/src" aquasec/trivy:latest fs --ignorefile /src/.trivyignore --scanners misconfig,secret --severity HIGH,CRITICAL --exit-code 1 /src
+      - name: Scan images
+        run: |
+          for svc in backend frontend database; do
+            docker build -t "$svc:scan" "${ACT}/$svc"
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD/${ACT}/.trivyignore:/src/.trivyignore:ro" aquasec/trivy:latest image --ignorefile /src/.trivyignore --severity CRITICAL --ignore-unfixed --exit-code 1 "$svc:scan"
+          done
+
+  dast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Start the stack
+        working-directory: act-4-cybersecurity-engineer
+        run: |
+          echo "DB_PASSWORD=$(openssl rand -hex 16)" > .env
+          echo "JWT_SECRET=$(openssl rand -hex 32)" >> .env
+          docker compose up --build -d
+          timeout 90 sh -c 'until curl -fs "http://localhost:8080/api/demo/work?units=1" >/dev/null; do sleep 2; done'
+      - name: ZAP baseline
+        run: |
+          mkdir -p "$PWD/${ACT}/zap"
+          chmod -R a+w "$PWD/${ACT}/zap"
+          docker run --rm --network host \
+            -v "$PWD/${ACT}/zap:/zap/wrk:rw" \
+            -v "$PWD/${ACT}/tools/zap/rules.tsv:/zap/rules.tsv:ro" \
+            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -I -t http://localhost:8080 -c /zap/rules.tsv -r zap-report.html
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: zap-report
+          path: act-4-cybersecurity-engineer/zap/zap-report.html

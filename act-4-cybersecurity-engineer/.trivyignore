@@ -1,0 +1,10 @@
+GCP-0031
+KSV-0014
+DS-0002
+KSV-0118
+KSV-0041
+# Upstream base-image CVEs with no fix available in the pinned Alpine release.
+# Revisit when nginx:1.27-alpine and postgres:16-alpine ship fixed packages.
+CVE-2026-111497
+CVE-2026-31789
+CVE-2025-68121

@@ -1,0 +1,62 @@
+# Usage: docker compose -f tools/compose.yaml run --rm <service> [command]
+services:
+  python-test:
+    image: python:3.12-slim
+    working_dir: /repo/backend
+    volumes:
+      - ..:/repo
+    command: sh -c "pip install --quiet --root-user-action=ignore -r requirements.txt && python -m unittest -v"
+
+  ansible:
+    build: ./ansible
+    volumes:
+      - ..:/repo
+      - ${HOME}/.ssh:/root/.ssh-host:ro
+    entrypoint: ["sh", "-c", "mkdir -p /root/.ssh && cp /root/.ssh-host/id_ed25519* /root/.ssh/ && chmod 600 /root/.ssh/id_ed25519 && exec \"$@\"", "--"]
+    command: ansible --version
+
+  terraform:
+    image: hashicorp/terraform:1.9
+    working_dir: /repo/infra/terraform/gcp
+    volumes:
+      - ..:/repo
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/.config/gcloud/application_default_credentials.json
+
+  gcloud:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:stable
+    volumes:
+      - ${HOME}/.config/gcloud:/root/.config/gcloud
+
+  sqlmap:
+    build: ./sqlmap
+    image: tools-sqlmap:local
+
+  semgrep:
+    image: semgrep/semgrep
+    working_dir: /repo
+    volumes:
+      - ..:/repo
+
+  trivy:
+    image: aquasec/trivy
+    volumes:
+      - ..:/repo
+      - trivy-cache:/root/.cache/trivy
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /repo
+
+  latex:
+    image: texlive/texlive
+    working_dir: /repo/cv
+    volumes:
+      - ..:/repo
+
+  kubeseal:
+    build: ./kubeseal
+    volumes:
+      - ..:/repo
+
+volumes:
+  trivy-cache:
