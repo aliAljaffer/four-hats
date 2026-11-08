@@ -67,13 +67,13 @@ Last resort: [open the solved Act 1 folder](https://github.com/aliAljaffer/four-
 
 #### Task 2: Clone your fork
 
-Clone your fork to your laptop.
+Clone your fork to your laptop. Replace `YOUR_USERNAME` with your GitHub username.
 
 <details>
 <summary>Show solution</summary>
 
 ```shell
-git clone https://github.com/<your-username>/four-hats.git
+git clone https://github.com/YOUR_USERNAME/four-hats.git
 cd four-hats
 ```
 
@@ -145,6 +145,8 @@ Concepts: repository, commit, branch, remote, fork, pull request, merge.
 ## Episode 3: Run the app
 
 Goal: you run all three parts in containers and call the API.
+
+If another program uses port 8000 or 8080, use 18000 or 18080 in the commands and URLs. The container port does not change.
 
 #### Task 1: Create a network
 
@@ -404,6 +406,8 @@ deleteButton.addEventListener("click", async () => {
 item.append(checkbox, title, deleteButton);
 ```
 
+Replace the existing `item.append(checkbox, title);` line with `item.append(checkbox, title, deleteButton);`.
+
 Last resort: [open the solved frontend/app.js](https://github.com/aliAljaffer/four-hats/blob/solved/act-1-software-engineer/frontend/app.js)
 
 </details>
@@ -602,6 +606,8 @@ Start the stack.
 <details>
 <summary>Show solution</summary>
 
+If port 8080 is in use, change the frontend mapping in `compose.yaml` to `"18080:80"` and open `http://localhost:18080`.
+
 ```shell
 docker compose up --build
 ```
@@ -650,6 +656,10 @@ Create `.github/workflows/ci.yml`. Run it on `pull_request` and on `push` to `ma
 
 <details>
 <summary>Show solution</summary>
+
+```shell
+mkdir -p .github/workflows
+```
 
 ```yaml
 name: CI
@@ -723,6 +733,8 @@ Add a `build` job: run `docker compose build`. Set `DB_PASSWORD` in the job, bec
         env:
           DB_PASSWORD: ci-only
 ```
+
+The four fragments form one file. `test:` and `build:` are two entries under `jobs:`, at the same indentation.
 
 Last resort: [open the solved CI workflow](https://github.com/aliAljaffer/four-hats/blob/solved/act-1-software-engineer/.github/workflows/ci.yml)
 

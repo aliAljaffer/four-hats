@@ -607,14 +607,14 @@ Last resort: [open the solved Act 3 folder](https://github.com/aliAljaffer/four-
 
 #### Task 9: Create the namespace and the database Secret
 
-Create the namespace first. Then create the database Secret on the command line. Never commit the Secret.
+Create the namespace first. Then create the database Secret on the command line. Never commit the Secret. Replace `choose-a-password` with your own password.
 
 <details>
 <summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- apply -f kubernetes/app/namespace.yaml
-minikube kubectl -- create secret generic app-db -n app --from-literal=username=tutorial --from-literal=password=<choose-a-password> --dry-run=client -o yaml | minikube kubectl -- apply -f -
+minikube kubectl -- create secret generic app-db -n app --from-literal=username=tutorial --from-literal=password=choose-a-password --dry-run=client -o yaml | minikube kubectl -- apply -f -
 ```
 
 Last resort: [open the solved Act 3 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-3-devops-engineer)
@@ -653,6 +653,8 @@ minikube kubectl -- get pv
 minikube kubectl -- get hpa -n app
 minikube service frontend -n app --url
 ```
+
+Keep `minikube service` running in its own terminal. Press Ctrl+C when you finish. If you need a non-blocking check, use `minikube kubectl -- port-forward service/frontend -n app 8080:80` and open `http://localhost:8080`.
 
 Expected: all Pods `Running`, the PVC `Bound`, and the HPA showing a CPU percentage.
 
@@ -752,23 +754,23 @@ minikube kubectl -- create namespace argocd --dry-run=client -o yaml | minikube 
 minikube kubectl -- apply --server-side --force-conflicts -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v3.5.1/manifests/install.yaml
 ```
 
-Last resort: [open the solved ArgoCD examples](https://github.com/aliAljaffer/four-hats/tree/solved/act-3-devops-engineer/kubernetes/argocd/applications)
+Last resort: [open the solved Act 3 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-3-devops-engineer)
 
 </details>
 
-#### Task 15: Create the ArgoCD Secrets
+#### Task 15: Create the Grafana Secret
 
-Create the Secret that ArgoCD cannot read from Git. `app-db` already exists from Episode 13.
+Create the Secret that ArgoCD cannot read from Git. `app-db` already exists from Episode 13. This task creates `grafana-admin` only. Replace `choose-a-password` with your own password.
 
 <details>
 <summary>Show solution</summary>
 
 ```shell
 minikube kubectl -- apply -f observability/namespace.yaml
-minikube kubectl -- create secret generic grafana-admin -n monitoring --from-literal=admin-user=admin --from-literal=admin-password=<choose-a-password> --dry-run=client -o yaml | minikube kubectl -- apply -f -
+minikube kubectl -- create secret generic grafana-admin -n monitoring --from-literal=admin-user=admin --from-literal=admin-password=choose-a-password --dry-run=client -o yaml | minikube kubectl -- apply -f -
 ```
 
-Last resort: [open the solved ArgoCD examples](https://github.com/aliAljaffer/four-hats/tree/solved/act-3-devops-engineer/kubernetes/argocd/applications)
+Last resort: [open the solved Act 3 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-3-devops-engineer)
 
 </details>
 
@@ -784,6 +786,12 @@ Write two Applications in `kubernetes/argocd/applications/`: `app.yaml` and `mon
 <details>
 <summary>Show solution</summary>
 
+Create the folder first:
+
+```shell
+mkdir -p kubernetes/argocd/applications
+```
+
 `kubernetes/argocd/applications/app.yaml`:
 
 ```yaml
@@ -795,7 +803,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-username>/four-hats.git
+    repoURL: https://github.com/YOUR_USERNAME/four-hats.git
     targetRevision: main
     path: kubernetes/app
   destination:
@@ -820,7 +828,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-username>/four-hats.git
+    repoURL: https://github.com/YOUR_USERNAME/four-hats.git
     targetRevision: main
     path: observability
   destination:
@@ -980,13 +988,13 @@ Last resort: [open the solved alertmanager.yaml](https://github.com/aliAljaffer/
 
 #### Task 23: Create the Alertmanager Secret
 
-Create the Secret that holds the webhook URL.
+Create the Secret that holds the webhook URL. Replace `YOUR_WEBHOOK_URL` with the URL from Discord.
 
 <details>
 <summary>Show solution</summary>
 
 ```shell
-minikube kubectl -- create secret generic alertmanager-discord -n monitoring --from-literal=webhook_url=<your-webhook-url> --dry-run=client -o yaml | minikube kubectl -- apply -f -
+minikube kubectl -- create secret generic alertmanager-discord -n monitoring --from-literal=webhook_url=YOUR_WEBHOOK_URL --dry-run=client -o yaml | minikube kubectl -- apply -f -
 ```
 
 Last resort: [open the solved alertmanager.yaml](https://github.com/aliAljaffer/four-hats/blob/solved/act-3-devops-engineer/observability/alertmanager.yaml)
@@ -1159,7 +1167,7 @@ gcloud compute disks list --filter='name~pvc-'
 Delete each disk that the GKE demo created:
 
 ```shell
-gcloud compute disks delete <disk-name> --zone <zone>
+gcloud compute disks delete DISK_NAME --zone ZONE
 ```
 
 Check the Billing page. It must show no running resources.

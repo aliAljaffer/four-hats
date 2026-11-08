@@ -49,7 +49,7 @@ Note: Some steps fail if you skipped an optional part. For example, `multipass d
    Delete each disk that the GKE demo created:
 
    ```shell
-   gcloud compute disks delete <disk-name> --zone <zone>
+   gcloud compute disks delete DISK_NAME --zone ZONE
    ```
 
 7. Remove the course images:
