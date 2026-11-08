@@ -654,7 +654,47 @@ Add `.github/workflows/security.yml`. On every pull request, run Semgrep and Tri
 <details>
 <summary>Show solution</summary>
 
-Create `.github/workflows/security.yml` with a Semgrep job and a Trivy job. The solved reference has both jobs. It also has an optional DAST job that starts the Compose stack and runs ZAP.
+```yaml
+name: Security
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          docker run --rm -v "$PWD:/src" semgrep/semgrep semgrep scan \
+            --config p/python --config p/javascript --config p/dockerfile \
+            --config /src/tools/semgrep/sql-injection.yml \
+            --error /src/backend /src/frontend
+
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan config and secrets
+        run: |
+          docker run --rm -v "$PWD:/src" aquasec/trivy:latest fs \
+            --scanners misconfig,secret --severity HIGH,CRITICAL --exit-code 1 /src
+      - name: Scan images
+        run: |
+          for svc in backend frontend database; do
+            docker build -t "$svc:scan" "./$svc"
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+              aquasec/trivy:latest image --severity CRITICAL --ignore-unfixed --exit-code 1 "$svc:scan"
+          done
+```
+
+The solved reference also has an optional DAST job that starts the Compose stack and runs ZAP. Keep ZAP as a manual step by default.
 
 Last resort: [open the solved security workflow](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/.github/workflows/security.yml)
 
