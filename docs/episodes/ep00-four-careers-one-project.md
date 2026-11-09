@@ -47,7 +47,7 @@ The app is a task board. It has three parts:
 | Backend | Python Flask REST API | Validate requests, run SQL, return JSON |
 | Database | PostgreSQL | Store tasks in one table |
 
-![The browser calls the backend. The backend reads and writes PostgreSQL](../assets/diagrams/ep00-app-architecture.webp)
+![The browser calls the backend. The backend reads and writes PostgreSQL](../assets/diagrams/ep00-app-architecture.svg)
 
 The app is deliberately small. A small app lets you see the whole system, and it leaves room for the infrastructure and security work in later acts.
 

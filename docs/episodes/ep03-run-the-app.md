@@ -39,7 +39,7 @@ A class and an object is a close analogy. The image is the definition. The conta
 
 The three images in this episode come from Docker Hub: `postgres:16-alpine`, `python:3.12-slim`, and `nginx:1.27-alpine`.
 
-![An image is the blueprint. A container is a running copy](../assets/diagrams/ep03-image-vs-container.webp)
+![An image is the blueprint. A container is a running copy](../assets/diagrams/ep03-image-vs-container.svg)
 
 ## One network, three names
 

@@ -36,7 +36,7 @@ Declarative YAML stores this intent in Git. A reviewer can read the file, test i
 
 A cluster is a set of machines that run containers. The control plane decides, and the nodes run the Pods. A Pod is one or more containers that run together on a node. Minikube makes a one-node cluster on your laptop, so the control plane and the node share one machine for this lab.
 
-![Control plane decides. Nodes run Pods. Pods hold containers](../assets/diagrams/ep11-kubernetes-cluster.webp)
+![Control plane decides. Nodes run Pods. Pods hold containers](../assets/diagrams/ep11-kubernetes-cluster.svg)
 
 A Namespace groups resources. A Deployment keeps a set number of Pod copies running. That is the core idea, declare the count, and the control loop keeps the count.
 

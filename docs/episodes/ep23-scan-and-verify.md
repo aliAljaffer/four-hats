@@ -54,7 +54,7 @@ DAST tests the running app over HTTP, the same way an attacker or a user would, 
 
 Target the frontend, not the backend. The backend has no page at the root path, and its responses carry Flask headers. The headers in this episode live in `frontend/nginx.conf`, so the scan must go through Nginx. Run the scanner as a Pod inside the cluster, the same reasoning as `sqlmap`: it reaches the app by Service name, and nothing is exposed beyond the cluster. The Pod carries the scanner label, which is how the NetworkPolicy lets it reach the frontend. Without that label, the default-deny egress rule blocks the scan and the Pod fails with a connection timeout.
 
-![One scan per layer: source code, supply chain, running app](../assets/diagrams/ep23-scan-coverage.webp)
+![One scan per layer: source code, supply chain, running app](../assets/diagrams/ep23-scan-coverage.svg)
 
 A few details decide whether the scan succeeds. The `-I` flag keeps the Pod successful when the only result is warnings. Without it, the baseline script exits with code 2 and the wait command never sees `Succeeded`, even though the report is complete. Read the findings from the Pod log. Do not copy a report out of the exited container: its process is gone, so the copy command cannot run inside it. The working directory volume is required even without a report option, because the scanner script refuses to start with file-based options unless that directory is a mount. The starter rules file silences two informational findings only (cacheable content and modern web application). Every header finding still reports.
 

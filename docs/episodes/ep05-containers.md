@@ -43,7 +43,7 @@ The Dockerfile is versioned with the code. The Compose file states the wiring. A
 
 A Dockerfile is a list of steps. Each step creates a layer. Docker stores each layer and reuses it when the inputs have not changed.
 
-![Each Dockerfile line adds a layer. Unchanged layers come from the cache](../assets/diagrams/ep05-docker-layers.webp)
+![Each Dockerfile line adds a layer. Unchanged layers come from the cache](../assets/diagrams/ep05-docker-layers.svg)
 
 The order of the steps controls the cache. This order is fast:
 

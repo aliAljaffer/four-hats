@@ -53,7 +53,7 @@ Right now, every Pod in `app` can reach every other Pod. A compromised frontend 
 
 Default-deny first, then add only the paths the app needs. One policy blocks all ingress and all egress in `app`. Then three allow rules open the three paths the app needs. Frontend accepts ingress from anywhere on port 80. Backend accepts ingress from Pods labeled `app.kubernetes.io/name: frontend`. Database accepts ingress from Pods labeled `app.kubernetes.io/name: backend`. Each tier gets only the access it needs. That is least privilege applied to the network.
 
-![Frontend accepts from anywhere, backend only from frontend, Postgres only from backend](../assets/diagrams/ep22-networkpolicy.webp)
+![Frontend accepts from anywhere, backend only from frontend, Postgres only from backend](../assets/diagrams/ep22-networkpolicy.svg)
 
 Use the labels in the manifests. A label such as `app: frontend` matches no Pod. The Deployments use `app.kubernetes.io/name` values of `frontend`, `backend`, and `postgres`. A wrong label name fails silently. The rule looks correct but allows nothing. The app breaks in a way that looks like a code bug. It is a label bug.
 

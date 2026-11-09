@@ -33,7 +33,7 @@ A developer pushes a branch. GitHub detects the push and starts the workflow. A 
 
 The result appears on the pull request as a status check.
 
-![Push, run the checks, merge only when green](../assets/diagrams/ep06-ci-flow.webp)
+![Push, run the checks, merge only when green](../assets/diagrams/ep06-ci-flow.svg)
 
 Three facts follow from the clean machine:
 

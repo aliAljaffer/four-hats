@@ -53,7 +53,7 @@ A StatefulSet works with a headless Service. A normal Service chooses one addres
 
 The disk comes from a `volumeClaimTemplates` entry. A template is a pattern. The StatefulSet copies it once per Pod. Each Pod gets its own PVC from the same 1Gi template. With one replica you get one PVC. If you scale to three Pods, you get three PVCs. Each template makes its own claim, so replicas do not share a disk by accident.
 
-![Pod, PVC, PV, and disk](../assets/diagrams/ep14-kubernetes-storage.webp)
+![Pod, PVC, PV, and disk](../assets/diagrams/ep14-kubernetes-storage.svg)
 
 Read the chain from left to right:
 

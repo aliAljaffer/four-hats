@@ -44,7 +44,7 @@ The app has never had users. Add a users table with a username and a password ha
 
 A JWT is a signed claim, not a secret the server stores per session. Anyone with the signing key can verify that a token is genuine, and nobody without the key can forge one. The signing key is a new environment variable, read the same way the database password is: required, never defaulted, and never committed. Every task route now requires a bearer token in the `Authorization` header. The health, readiness, metrics, and demo endpoints stay public on purpose: probes and the load generator have no login.
 
-![Register and log in, scope list and create by owner, gate updates and deletes by owner](../assets/diagrams/ep24-idor.webp)
+![Register and log in, scope list and create by owner, gate updates and deletes by owner](../assets/diagrams/ep24-idor.svg)
 
 ## Scope tasks to their owner
 

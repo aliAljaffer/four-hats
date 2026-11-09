@@ -46,7 +46,7 @@ The Service types are covered in the table below.
 
 Endpoints are the Pod addresses behind a Service. When endpoints list Pod IPs, routing has a target. An empty list means the selector does not match. On the Docker driver, the node port is not reachable from the host. `minikube service` opens a tunnel, and it must keep running. Closing that terminal stops the URL.
 
-![Labels pick Pods. Services front them with a stable name](../assets/diagrams/ep12-service-routing.webp)
+![Labels pick Pods. Services front them with a stable name](../assets/diagrams/ep12-service-routing.svg)
 
 The command line can create the same objects without YAML. `kubectl run` makes one bare Pod with no self-healing. `kubectl create deployment` makes a Deployment whose Pods are replaced if they die. `kubectl expose` makes a Service with one stable address in front of the Pods. `kubectl get`, `describe`, and `logs` look, look closer, and read the output. Use these for a quick test. Keep the YAML for real work. Edit the file and apply it, instead of editing the live resource with `kubectl edit`.
 

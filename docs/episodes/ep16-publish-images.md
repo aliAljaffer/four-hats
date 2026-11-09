@@ -52,7 +52,7 @@ linux/amd64,linux/arm64
 
 QEMU and Buildx in GitHub Actions build the other architecture on the runner. The first build is slower because it emulates the foreign chip. The result is still a normal image. Later pulls are fast because the right bytes are already stored. Multi-arch costs time once and saves motion every week after.
 
-![Commit, Actions, GHCR, and cluster](../assets/diagrams/ep16-registry-flow.webp)
+![Commit, Actions, GHCR, and cluster](../assets/diagrams/ep16-registry-flow.svg)
 
 ## The workflow in outline
 

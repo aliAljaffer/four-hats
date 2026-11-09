@@ -56,7 +56,7 @@ The task board can create and update tasks. It cannot delete them. You add one e
 | `DELETE /api/tasks/999` when task 999 does not exist | Status 404 and an error message |
 | `DELETE /api/tasks/7` when task 7 was already deleted | Status 404 |
 
-![The DELETE request and its two responses](../assets/diagrams/ep04-delete-endpoint.webp)
+![The DELETE request and its two responses](../assets/diagrams/ep04-delete-endpoint.svg)
 
 ### Why the status code matters
 

@@ -38,7 +38,7 @@ A branch is a copy of `main` where you work. The team reviews the branch before 
 
 The cycle has one direction:
 
-![Main stays clean. Work happens on a branch, then merges back](../assets/diagrams/ep02-branch-workflow.webp)
+![Main stays clean. Work happens on a branch, then merges back](../assets/diagrams/ep02-branch-workflow.svg)
 
 ## The seven terms
 

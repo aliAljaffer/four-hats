@@ -82,7 +82,7 @@ The reference network uses auto mode. It does not create the Episode 7 subnet. A
 
 `terraform.tfvars` holds your project ID and your IP. It is in `.gitignore`. Never commit it.
 
-![One VM is a single point of failure. A load balancer, a proxy, and a CDN share the load](../assets/diagrams/ep10-load-balancer.webp)
+![One VM is a single point of failure. A load balancer, a proxy, and a CDN share the load](../assets/diagrams/ep10-load-balancer.svg)
 
 ## Plan and apply
 

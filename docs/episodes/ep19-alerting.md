@@ -38,7 +38,7 @@ Prometheus checks a rule on a schedule. If the rule holds for its `for` window, 
 | Route | Picks which receiver gets which alert. |
 | Send resolved | Also sends a message when the alert clears. |
 
-![BackendUnavailable checks up equals zero. Alertmanager groups and routes to the Discord receiver](../assets/diagrams/ep19-alerting-pipeline.webp)
+![BackendUnavailable checks up equals zero. Alertmanager groups and routes to the Discord receiver](../assets/diagrams/ep19-alerting-pipeline.svg)
 
 Read the chain from left to right:
 

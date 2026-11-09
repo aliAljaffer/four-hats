@@ -35,7 +35,7 @@ A Secret holds the database username and password. Never write a password in a m
 
 The Secret for this act holds `username` and `password` for the database. The backend loads each value with `secretKeyRef`, which loads one key from a Secret. The same one-key pattern applies here as for a ConfigMap. Each environment variable names the exact key it needs.
 
-![Settings and secrets enter the backend by reference](../assets/diagrams/ep13-secret-base64.webp)
+![Settings and secrets enter the backend by reference](../assets/diagrams/ep13-secret-base64.svg)
 
 The Secret must live in the same Namespace as the Pod that reads it. This act keeps the Secret in `app`. A Secret in the wrong Namespace breaks the Pod. The Pod can then show `CreateContainerConfigError`, because it cannot read its configuration.
 

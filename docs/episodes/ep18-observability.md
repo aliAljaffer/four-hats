@@ -39,7 +39,7 @@ An app exposes numbers at `/metrics`. Prometheus pulls those numbers on a schedu
 
 Read the chain from left to right:
 
-![Backend, frontend, and postgres metrics feed Prometheus. Grafana draws dashboards from Prometheus queries](../assets/diagrams/ep18-metrics-pipeline.webp)
+![Backend, frontend, and postgres metrics feed Prometheus. Grafana draws dashboards from Prometheus queries](../assets/diagrams/ep18-metrics-pipeline.svg)
 
 The pipeline has four properties:
 

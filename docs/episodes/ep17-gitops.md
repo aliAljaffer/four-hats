@@ -45,7 +45,7 @@ Pull delivery reverses the direction. ArgoCD runs inside the cluster. It polls t
 
 This episode uses pull delivery with ArgoCD. After this point, no command in this act runs `kubectl apply` against the app manifests from your laptop. You commit, you push, ArgoCD syncs.
 
-![Git holds manifests. ArgoCD reads Git and syncs the app and monitoring namespaces](../assets/diagrams/ep17-gitops-pull.webp)
+![Git holds manifests. ArgoCD reads Git and syncs the app and monitoring namespaces](../assets/diagrams/ep17-gitops-pull.svg)
 
 ## Git holds the desired state
 

@@ -32,7 +32,7 @@ A cloud server is a VM that someone else hosts. You build one on your laptop wit
 
 A VM is a full computer: its own kernel, users, filesystem, and network interface. A hypervisor shares the real CPU, memory, and disk between the VMs.
 
-![A VM has its own kernel. A container shares the host kernel](../assets/diagrams/ep08-vm-vs-container.webp)
+![A VM has its own kernel. A container shares the host kernel](../assets/diagrams/ep08-vm-vs-container.svg)
 
 | VM | Container |
 |---|---|

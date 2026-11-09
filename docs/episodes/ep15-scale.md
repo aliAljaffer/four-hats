@@ -84,7 +84,7 @@ This act uses YAML instead. Git can store YAML, review it, and restore it. The o
 
 The metrics server collects CPU use. `top pods` shows it. The HPA checks every 15 seconds. CPU metrics can lag. Give it about a minute before you judge. A `<unknown>` target after that minute means `metrics-server` is not ready or the Pod has no CPU request. Check the Pod `resources.requests` before you tune anything else.
 
-![Load, replicas, and HPA](../assets/diagrams/ep15-hpa-loop.webp)
+![Load, replicas, and HPA](../assets/diagrams/ep15-hpa-loop.svg)
 
 ## Tune how fast the HPA reacts
 

@@ -62,7 +62,7 @@ The flow has three steps:
 2. Git and ArgoCD carry the `SealedSecret`. The `SealedSecret` syncs like any other manifest.
 3. The cluster holds the private key. The controller decrypts the `SealedSecret` into an ordinary Secret that your Deployments already read from, exactly as before.
 
-![Laptop, Git, cluster: encrypt with public key, sync ciphertext, decrypt in cluster](../assets/diagrams/ep25-sealed-secrets.webp)
+![Laptop, Git, cluster: encrypt with public key, sync ciphertext, decrypt in cluster](../assets/diagrams/ep25-sealed-secrets.svg)
 
 The ciphertext in Git is useless on its own. Without the one cluster that generated the keypair, nobody can unseal it. Committing it does not leak the value. Removing the hand-made exception also removes a gap: the cluster can match Git, with no Secrets created by hand.
 

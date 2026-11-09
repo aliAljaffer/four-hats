@@ -62,7 +62,7 @@ The search endpoint is the first one that takes raw user input and uses it to fi
 
 `curl` shows you one request at a time. A proxy shows you every request your browser makes. Burp Suite sits between your browser and the app. It records, replays, and lets you edit requests.
 
-![Browser, Burp Suite proxy on 127.0.0.1 port 8080, then the task board API](../assets/diagrams/ep20-attack-surface.webp)
+![Browser, Burp Suite proxy on 127.0.0.1 port 8080, then the task board API](../assets/diagrams/ep20-attack-surface.svg)
 
 Burp Suite listens on `127.0.0.1` port 8080. Your browser sends each request to that listener. Burp sends the request on to the app and records the response. You then see the whole conversation in the site map. Turn the browser proxy off after this episode. Do not leave it pointed at Burp for normal browsing, or every request will fail or be logged.
 
