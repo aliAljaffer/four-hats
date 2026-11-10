@@ -453,7 +453,7 @@ function mountSwitcher(){
   });
   applyPalette("gardenhour","night");
 }
-function showSlidefunction showSlide(n){
+function showSlide(n){
   if(n<1)n=1;if(n>total)n=total;current=n;
   slides.forEach(function(s,i){s.classList.toggle("active",i===n-1)});
   document.getElementById("current").textContent=n;
