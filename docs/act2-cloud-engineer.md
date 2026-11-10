@@ -9,9 +9,23 @@
 | Task | The app runs only on developer laptops. Nobody else can reach it. |
 | Goal | Run the app on a server that users can reach. Build the server from code. Keep cost known and open ports few. |
 | Done when | cloud-init and Ansible build a VM that runs the app. Terraform builds the same on Google Cloud. You destroy it afterwards. |
-| Start here | Fork the starter repository. Copy `act-1-software-engineer/` from the `solved` branch into your fork. Keep the starter `tools/` folder. Install Docker Desktop and Multipass. |
+| Start here | Fork the starter repository. Copy the contents of `act-1-software-engineer/` from the `solved` branch to the root of your fork, not the folder itself. Replace files that have the same name. Do not replace the starter `tools/` folder. Install Docker Desktop and Multipass. |
 
 Try each task first. Open **Show solution** for that task only when you are stuck. The last line in each solution links to the `solved` branch. Use that link as a last resort.
+
+### If you skipped Act 1
+
+The Compose file reads the database password from a `.env` file. Git ignores `.env`, so the `act-1-software-engineer/` snapshot does not contain it. Without it, `docker compose up` stops with `Set DB_PASSWORD in .env`. Act 1 creates the file in [Episode 5, Task 5](act1-software-engineer.md#task-5-copy-the-environment-file).
+
+1. Copy the example file to `.env`. Run the command from the root of your fork:
+
+   ```shell
+   cp .env.example .env
+   ```
+
+   On Windows PowerShell, use `Copy-Item .env.example .env`.
+
+2. Open `.env`. Replace `change-me-locally` with a password of your own.
 
 ## What a Cloud Engineer does
 
@@ -89,7 +103,7 @@ Last resort: [open the solved Act 2 folder](https://github.com/aliAljaffer/four-
 
 #### Task 3: Measure the memory
 
-Measure the memory of the running stack from Act 1.
+Measure the memory of the running stack from Act 1. That is the Compose stack from [Episode 5, Task 6](act1-software-engineer.md#task-6-start-the-stack): the frontend, backend, and database containers started with one `docker compose up`. The size of the VM depends on this number.
 
 <details>
 <summary>Show solution</summary>

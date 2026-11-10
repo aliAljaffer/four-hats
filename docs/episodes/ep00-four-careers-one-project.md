@@ -101,7 +101,7 @@ Each act is a separate job. You can start at any act.
 
 - Each act opens with a briefing: what happened before, the task, the goal, and what "done" means.
 - Each act ends with a review and a resume checkpoint you can use on its own.
-- The solved repository has one folder per act. If you skip ahead, copy the previous act folder into your fork.
+- The solved repository has one folder per act. If you skip ahead, copy the contents of the previous act folder to the root of your fork, not the folder itself.
 - Your own repository is a fork of the starter repository.
 
 The acts are independent enough to start anywhere, and connected enough that the same app carries through.
