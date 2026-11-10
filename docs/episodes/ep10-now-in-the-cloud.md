@@ -7,7 +7,7 @@ A cloud VM is the same as your Multipass VM. Someone else owns the hardware. Tod
 | | |
 |---|---|
 | You need | Episode 9 complete. A Google Cloud free trial account. Read `docs/costs-and-free-options.md`. |
-| You build | A network, firewall rules, and a Compute Engine VM on Google Cloud with Terraform, then the task board with the same Ansible playbook |
+| You build | A network, firewall rules, and a [[gcp/compute-engine|Compute Engine]] VM on Google Cloud with Terraform, then the task board with the same Ansible playbook |
 | Done when | The plan lists 4 resources, the app runs at the output URL, and destroy removes 4 resources with nothing left running |
 
 ## What you will be able to do
@@ -50,7 +50,7 @@ On Windows PowerShell, run `$env:HOME = $env:USERPROFILE` first. The container c
 
 ## Terraform describes the state
 
-Infrastructure as code means desired state in files. Tools reconcile reality with what you wrote.
+[[cloud/infrastructure-as-code|Infrastructure as code]] means desired state in files. Tools reconcile reality with what you wrote.
 
 You write the state you want in `.tf` files. `plan` shows what will change. `apply` makes the change. `destroy` removes it. Terraform keeps a state file. It lists what Terraform created. Do not commit the state file.
 
@@ -72,7 +72,7 @@ Reviewable infrastructure. `terraform plan` shows the change before it happens. 
 
 Three files describe the rest:
 
-- `variables.tf`: project ID, region, zone, machine type, SSH public key, and your IP in CIDR form.
+- `variables.tf`: project ID, region, zone, machine type, SSH public key, and your IP in [[cloud/cidr|CIDR]] form.
 - `main.tf`: a network, a firewall rule for port 22 from your IP only, a firewall rule for port 8080, and a Compute Engine VM with Ubuntu 24.04, 20 GB disk, and a public IP.
 - `outputs.tf`: the VM IP and the app URL.
 
@@ -139,7 +139,7 @@ Three ideas appear when an app grows past one VM. You do not build them in this 
 
 | Idea | What it does | On Google Cloud |
 |---|---|---|
-| Load balancer | Sits in front of many servers. It spreads traffic across them, so no server is overwhelmed. It also skips a server that is down. | Cloud Load Balancing |
+| Load balancer | Sits in front of many servers. It spreads traffic across them, so no server is overwhelmed. It also skips a server that is down. | [[gcp/cloud-load-balancing|Cloud Load Balancing]] |
 | Reverse proxy | Forwards requests to another server. Our frontend Nginx already does this. It forwards `/api` to the backend. | The Nginx `proxy_pass` line in `frontend/nginx.conf` |
 | CDN | Keeps copies of your files in cities around the world. Users load them from a nearby city. | Cloud CDN |
 

@@ -15,7 +15,7 @@ You add a gate between a developer and `main`. Every pull request runs the tests
 - Explain what a workflow, a job, a step, and a runner are.
 - Write a workflow that runs on pull requests and on push to `main`.
 - Run tests and build images on a clean machine.
-- Apply least privilege with `contents: read`.
+- Apply [[cloud/principle-of-least-privilege|least privilege]] with `contents: read`.
 - Read a status check and the job log.
 - Break a test on purpose, watch CI fail, and fix it.
 - Explain why professional teams do not run tests by hand.

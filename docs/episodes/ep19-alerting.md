@@ -2,7 +2,7 @@
 
 **Act 3, DevOps Engineer** · Focus: Site Reliability Engineer (SRE) · About 22 to 27 minutes
 
-Dashboards need someone to look at them. Alerts come to you. This episode makes the app send a message to Discord when it fails. It closes with a demo-only segment on managed Kubernetes with GKE.
+Dashboards need someone to look at them. Alerts come to you. This episode makes the app send a message to Discord when it fails. It closes with a demo-only segment on managed Kubernetes with [[gcp/gke|GKE]].
 
 | | |
 |---|---|
@@ -154,7 +154,7 @@ Apply the same `kubernetes/app/` manifests: the Namespace, the Deployments, the 
 
 Same Deployments, StatefulSet, ConfigMaps, and Secrets, running on a different cluster. What changes: a managed control plane, automatic node upgrades, and a `LoadBalancer` Service that gets a real external IP, which Minikube cannot do without MetalLB. A `NodePort` Service never gets an external IP on GKE. What does not change: everything else this act taught you.
 
-Delete the cluster right after the demo, not at the end of the session. The cluster can leave Persistent Disk volumes behind. List disks with `gcloud compute disks list --filter='name~pvc-'` and delete each disk the demo created. Check the Billing page. It must show no running resources.
+Delete the cluster right after the demo, not at the end of the session. The cluster can leave [[gcp/persistent-disk|Persistent Disk]] volumes behind. List disks with `gcloud compute disks list --filter='name~pvc-'` and delete each disk the demo created. Check the Billing page. It must show no running resources.
 
 ## Limits and tradeoffs
 

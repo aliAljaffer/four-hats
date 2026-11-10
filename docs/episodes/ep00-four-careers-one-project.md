@@ -44,7 +44,7 @@ The app is a task board. It has three parts:
 | Part | Technology | Job |
 |---|---|---|
 | Frontend | HTML, CSS, JavaScript, served by Nginx | Show the list and send API requests |
-| Backend | Python Flask REST API | Validate requests, run SQL, return JSON |
+| Backend | Python Flask [[rest|REST API]] | Validate requests, run SQL, return JSON |
 | Database | PostgreSQL | Store tasks in one table |
 
 ![The browser calls the backend. The backend reads and writes PostgreSQL](../assets/diagrams/ep00-app-architecture.svg)
@@ -79,7 +79,7 @@ What you practice: Git, Python, Flask, SQL, unit testing, Docker, CI.
 
 ### Act 2: Cloud Engineer
 
-You plan the machine: CPU, memory, storage, firewall, CIDR, DNS, and cost. Then you build the same machine twice. First on Multipass with cloud-init, then on Google Cloud with Terraform. Ansible configures it, and the playbook is idempotent, so a second run changes nothing.
+You plan the machine: CPU, memory, storage, firewall, [[cloud/cidr|CIDR]], DNS, and cost. Then you build the same machine twice. First on Multipass with cloud-init, then on Google Cloud with Terraform. Ansible configures it, and the playbook is idempotent, so a second run changes nothing.
 
 What you practice: Multipass, cloud-init, Ansible, Terraform, GCP, Linux administration.
 

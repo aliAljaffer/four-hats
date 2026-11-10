@@ -14,7 +14,7 @@ Every app you have built so far assumed its users are honest. This episode stops
 
 - Write a scope and rules of engagement before testing anything.
 - Map the OWASP Top 10 onto a real three-tier app.
-- Read an API by hand with `curl` and name each endpoint, parameter, and status code.
+- Read an API by hand with `curl` and name each endpoint, parameter, and [[status-code|status code]].
 - Map an attack surface with Burp Suite and list every request in the site map.
 - Explain why reading the code and the traffic beats running a scanner on autopilot.
 

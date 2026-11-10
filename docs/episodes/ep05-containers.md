@@ -95,7 +95,7 @@ USER app
 
 `--chown=app:app` makes the files owned by the user that will read them. `USER app` changes the process user for every later instruction and for the container start.
 
-This is least privilege at the process level. It does not replace a network policy or a read-only filesystem, which arrive in Act 4.
+This is [[cloud/principle-of-least-privilege|least privilege]] at the process level. It does not replace a network policy or a read-only filesystem, which arrive in Act 4.
 
 ## The Compose file
 

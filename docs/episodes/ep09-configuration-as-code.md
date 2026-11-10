@@ -153,7 +153,7 @@ The playbook is documentation that runs. A teammate reads it in Git and sees how
 | Skill | Episode | CV section | Example bullet |
 |---|---|---|---|
 | Ansible | 9 | Cloud and Infrastructure | Wrote an idempotent Ansible playbook that installs Docker, sets the firewall, and deploys a Compose stack |
-| Firewalls (UFW, VPC rules) | 9, 10 | Cloud and Infrastructure | Closed all ports except SSH and HTTP with UFW and GCP firewall rules |
+| Firewalls (UFW, [[gcp/vpc|VPC]] rules) | 9, 10 | Cloud and Infrastructure | Closed all ports except SSH and HTTP with UFW and GCP firewall rules |
 
 ## Career note
 

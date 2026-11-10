@@ -8,7 +8,7 @@ Your app runs on your laptop. Users cannot reach your laptop. This episode decid
 |---|---|
 | You need | Episode 5 complete. `docker compose up` works. A browser for the pricing calculator. |
 | You build | A one-page infrastructure plan: parts, size, network, ports, cost |
-| Done when | The plan names the service model, region, zone, VM size, VPC and subnet, open ports, and monthly cost |
+| Done when | The plan names the service model, region, zone, VM size, [[gcp/vpc|VPC]] and subnet, open ports, and monthly cost |
 
 ## What you will be able to do
 
@@ -16,7 +16,7 @@ Your app runs on your laptop. Users cannot reach your laptop. This episode decid
 - Name a region, a zone, an instance, and an image.
 - Size a VM from measured data, not a guess.
 - Decide which ports to open and to whom.
-- Read CIDR notation and plan one VPC with one subnet.
+- Read [[cloud/cidr|CIDR]] notation and plan one VPC with one subnet.
 - Name the three private address ranges.
 - Resolve a name with `nslookup`.
 - Draw an architecture diagram for review.
@@ -52,7 +52,7 @@ One question sorts every cloud service: how much do you manage, and how much doe
 
 | Model | You manage | Provider manages | Example |
 |---|---|---|---|
-| IaaS | Operating system, runtime, app | Hardware, network | A Compute Engine VM. This act. |
+| IaaS | Operating system, runtime, app | Hardware, network | A [[gcp/compute-engine|Compute Engine]] VM. This act. |
 | PaaS | Your app and data | Everything else | A managed database |
 | SaaS | Nothing, you log in | All of it | Gmail, GitHub |
 
@@ -73,7 +73,7 @@ Plan for 2 vCPUs and 2 GB of memory. That covers the app, a build, and room for 
 
 Sizing from a guess produces one of two failures. Too small, and the build or the database dies under load. Too large, and you pay for capacity nobody uses.
 
-## Ports and least privilege
+## Ports and [[cloud/principle-of-least-privilege|least privilege]]
 
 Every open port is a way in. Open as few as you can.
 

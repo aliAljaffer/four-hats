@@ -56,7 +56,7 @@ The debug loop uses four commands in order, `get`, `describe`, `logs`, and event
 
 A wrong image tag shows `ImagePullBackOff`. The Events show `Failed to pull image`. Fix the tag and apply. A wrong selector shows `<none>` in ENDPOINTS. Fix the selector and apply. Those two cases cover the common faults. The scratch Deployment and Service from the command line exercise are a quick way to practice both the create and delete forms, and they must be deleted when the test ends.
 
-A Service of type LoadBalancer needs a cloud. Minikube uses NodePort plus `minikube service` for local access. NodePort fits a laptop. Ingress plus cloud load balancing fit production. Editing the live resource drifts from Git, so the file stays the source of truth.
+A Service of type LoadBalancer needs a cloud. Minikube uses NodePort plus `minikube service` for local access. NodePort fits a laptop. Ingress plus [[gcp/cloud-load-balancing|cloud load balancing]] fit production. Editing the live resource drifts from Git, so the file stays the source of truth.
 
 ## Common mistakes
 

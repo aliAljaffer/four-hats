@@ -16,7 +16,7 @@ You add a delete feature to the task board. You write the test before the code, 
 - Write a REST endpoint that deletes one row and returns the deleted row.
 - Write unit tests that mock the database layer.
 - Explain why a missing resource returns 404, not 200.
-- Explain HTTP status codes and REST semantics: methods name the action, resources name the thing.
+- Explain HTTP [[status-code|status codes]] and REST semantics: methods name the action, resources name the thing.
 - Explain test-first thinking: red, green, refactor.
 - Review and merge one small pull request.
 

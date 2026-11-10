@@ -44,7 +44,7 @@ The ledger is built for review. If an interviewer asks about a line on your CV, 
 
 - Cloud Platforms
 - Containers & Orchestration
-- Infrastructure as Code
+- [[cloud/infrastructure-as-code|Infrastructure as Code]]
 - CI/CD & Automation
 - Monitoring & Observability
 - Programming & Scripting

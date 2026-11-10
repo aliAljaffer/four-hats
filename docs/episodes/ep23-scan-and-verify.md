@@ -30,7 +30,7 @@ No single scanner catches everything. SAST reads code that never ran. DAST tests
 | Term | What it reads | Tool in this episode |
 |---|---|---|
 | SAST, Semgrep | Source code, without running it. It matches a pattern you describe against every file. | Reads the backend source and flags the f-string injection pattern. |
-| SCA, IaC, and secrets, Trivy | Container images, Dockerfiles, Kubernetes YAML, Terraform, and credentials committed to the repository. | Reports base image vulnerabilities, misconfigurations, and any committed secret. |
+| SCA, [[cloud/infrastructure-as-code|IaC]], and secrets, Trivy | Container images, Dockerfiles, Kubernetes YAML, Terraform, and credentials committed to the repository. | Reports base image vulnerabilities, misconfigurations, and any committed secret. |
 | DAST, OWASP ZAP | The running app over HTTP, the same way a user or an attacker sees it, with no view of the source code. | Checks the response headers and cookies the browser receives. |
 | Workflow | The checks, running on every pull request. | Runs the Semgrep and Trivy scans before code can merge. |
 

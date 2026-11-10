@@ -64,7 +64,7 @@ Rebuild the backend and run the exact same attack again. Create a new task as th
 
 ## Write the regression test
 
-Add the test imports, a token helper that signs a token for a user ID, and an auth header helper. Then add a test that calls delete for a task ID with a token for a different user, and asserts that the response is 404, that the executed SQL contains the owner filter, and that the parameters carry both the task ID and the caller ID. The assertion checks the SQL and its parameters, not only the response. A test that only checks the status code would keep passing even if the ownership filter were quietly removed again, as long as some database state happened to return the right status. Update the two earlier delete-endpoint tests so they send the auth header.
+Add the test imports, a token helper that signs a token for a user ID, and an auth header helper. Then add a test that calls delete for a task ID with a token for a different user, and asserts that the response is 404, that the executed SQL contains the owner filter, and that the parameters carry both the task ID and the caller ID. The assertion checks the SQL and its parameters, not only the response. A test that only checks the [[status-code|status code]] would keep passing even if the ownership filter were quietly removed again, as long as some database state happened to return the right status. Update the two earlier delete-endpoint tests so they send the auth header.
 
 ## Common mistakes
 
