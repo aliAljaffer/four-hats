@@ -17,7 +17,7 @@ The course is a YouTube series. This repository is the starter code that you for
 
 Each act is a separate job. Pick the one you want.
 
-Act guides: [Act 1](docs/act1-software-engineer.md), [Act 2](docs/act2-cloud-engineer.md), [Act 3](docs/act3-devops-engineer.md), [Act 4](docs/act4-cybersecurity-engineer.md).
+Act guides: [Act 1](https://docs.alialjaffer.com/four-hats/episodes/ep02-git-and-github/), [Act 2](https://docs.alialjaffer.com/four-hats/episodes/ep07-plan-the-infrastructure/), [Act 3](https://docs.alialjaffer.com/four-hats/episodes/ep11-hello-kubernetes/), [Act 4](https://docs.alialjaffer.com/four-hats/episodes/ep20-think-like-an-attacker/).
 
 Each act guide gives you the task first. Open **Show solution** only for the task you are stuck on. The `solved` branch is the last resort.
 
@@ -29,7 +29,7 @@ Each act guide gives you the task first. Open **Show solution** only for the tas
 
 ## What it costs
 
-Nothing. Everything runs on your laptop. One optional episode uses a Google Cloud free trial. See [Costs and free options](docs/costs-and-free-options.md). When you finish an act, see the [Cleanup guide](docs/cleanup-guide.md).
+Nothing. Everything runs on your laptop. One optional episode uses a Google Cloud free trial. See [Costs and free options](https://docs.alialjaffer.com/four-hats/costs-and-free-options/). When you finish an act, see the [Cleanup guide](https://docs.alialjaffer.com/four-hats/cleanup-guide/).
 
 ## Requirements
 
@@ -38,17 +38,17 @@ Nothing. Everything runs on your laptop. One optional episode uses a Google Clou
 - 30 GB of free disk space
 - A free GitHub account
 
-Install steps are in [Setup](docs/00-setup.md).
+Install steps are in [Setup](https://docs.alialjaffer.com/four-hats/setup/).
 
 ## Episodes
 
 | Part | Doc |
 |---|---|
-| Ep 0 to 1: Introduction and setup | [Setup](docs/00-setup.md) |
-| Ep 2 to 6: Software Engineer | [Act 1](docs/act1-software-engineer.md) |
-| Ep 7 to 10: Cloud Engineer | [Act 2](docs/act2-cloud-engineer.md) |
-| Ep 11 to 19: DevOps Engineer | [Act 3](docs/act3-devops-engineer.md) |
-| Ep 20 to 25: Cybersecurity Engineer | [Act 4](docs/act4-cybersecurity-engineer.md) |
+| Ep 0 to 1: Introduction and setup | [Setup](https://docs.alialjaffer.com/four-hats/setup/) |
+| Ep 2 to 6: Software Engineer | [Act 1](https://docs.alialjaffer.com/four-hats/episodes/ep02-git-and-github/) |
+| Ep 7 to 10: Cloud Engineer | [Act 2](https://docs.alialjaffer.com/four-hats/episodes/ep07-plan-the-infrastructure/) |
+| Ep 11 to 19: DevOps Engineer | [Act 3](https://docs.alialjaffer.com/four-hats/episodes/ep11-hello-kubernetes/) |
+| Ep 20 to 25: Cybersecurity Engineer | [Act 4](https://docs.alialjaffer.com/four-hats/episodes/ep20-think-like-an-attacker/) |
 | Ep 26: Build your CV | [Skills ledger](cv/skills-ledger.md) |
 
 
@@ -67,6 +67,6 @@ database/       PostgreSQL schema
 observability/  Prometheus, Grafana, Alertmanager, and dashboard (Act 3)
 infra/          Cloud-init, Ansible, and Terraform (Act 2)
 tools/          Docker Compose services for course tools
-docs/           Act guides
+docs/           Infrastructure plan template (Act 2)
 cv/             Skills ledger and CV template
 ```
