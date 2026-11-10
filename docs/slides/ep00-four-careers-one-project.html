@@ -447,10 +447,6 @@ function applyPalette(palette,mode){
 function mountSwitcher(){
   const host=document.getElementById("switcher");
   if(!host) return;
-  host.innerHTML='<button class="mode-toggle" type="button">Night</button>';
-  host.querySelector(".mode-toggle").addEventListener("click",function(){
-    applyPalette("gardenhour", root.dataset.mode==="night"?"day":"night");
-  });
   applyPalette("gardenhour","night");
 }
 function showSlide(n){
