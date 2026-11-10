@@ -14,7 +14,7 @@ The core course is free. You need a laptop, an internet connection, and a free G
 
 ## Google Cloud (Episodes 10 and 19, optional)
 
-Episode 10 repeats the Act 2 VM work on Google Cloud. Episode 19 closes with a demo of the same Kubernetes manifests running on GKE. You can watch both without an account; neither is required to finish the course.
+Episode 10 repeats the Act 2 VM work on Google Cloud. Episode 19 closes with a demo of the same Kubernetes manifests running on [[gcp/gke|GKE]]. You can watch both without an account; neither is required to finish the course.
 
 To follow along, you need a Google Cloud free trial:
 

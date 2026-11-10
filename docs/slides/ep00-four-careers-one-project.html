@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="gardenhour" data-mode="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ep 00, Four Careers, One Project, Plein Air Slides</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+@font-face{
+  font-family:"Fraunces";
+  src:url("./fonts/Fraunces[SOFT,WONK,opsz,wght].ttf") format("truetype-variations");
+  font-weight:100 900;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Karla";
+  src:url("./fonts/Karla[wght].ttf") format("truetype-variations");
+  font-weight:200 800;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Karla";
+  src:url("./fonts/Karla-Italic[wght].ttf") format("truetype-variations");
+  font-weight:200 800;font-style:italic;font-display:swap;
+}
+@font-face{
+  font-family:"Spline Sans Mono";
+  src:url("./fonts/SplineSansMono[wght].ttf") format("truetype-variations");
+  font-weight:300 700;font-style:normal;font-display:swap;
+}
+:root{
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
+  --sans:"Karla",ui-sans-serif,system-ui,sans-serif;
+  --mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;--r-xl:26px;
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,-webkit-text-size-adjust:100%{height:100%}
+body{
+  min-height:100dvh;font-family:var(--sans);font-size:17px;line-height:1.55;
+  color:var(--ink);background-color:var(--paper);
+  background-image:
+    radial-gradient(115% 85% at 6% -10%,var(--wash-a) 0%,transparent 56%),
+    radial-gradient(85% 70% at 98% -4%,var(--wash-b) 0%,transparent 52%),
+    radial-gradient(75% 65% at 46% 112%,var(--wash-c) 0%,transparent 60%),
+    radial-gradient(55% 55% at 100% 100%,var(--wash-c) 0%,transparent 70%);
+  background-attachment:fixed;overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.72;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E");
+}
+[data-mode="night"] .grain{mix-blend-mode:screen;opacity:.22}
+.slide-deck{position:relative;width:100vw;height:100dvh;overflow:hidden;z-index:1}
+.dabs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.dabs i{position:absolute;display:block;border-radius:58% 42% 46% 54% / 54% 48% 52% 46%;filter:blur(26px);mix-blend-mode:multiply;opacity:.55}
+[data-mode="night"] .dabs i{mix-blend-mode:screen;opacity:.26}
+.slide{
+  position:absolute;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;
+  padding:52px 60px;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;overflow:hidden;
+}
+.slide.active{opacity:1;visibility:visible}
+.slide-content{position:relative;z-index:1;width:100%;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.slide:first-child .slide-content{max-width:calc(100vw - 80px);align-items:flex-start}
+.slide:first-child .slide-title{white-space:nowrap;font-size:clamp(48px,5.2vw,72px);line-height:1;letter-spacing:-0.03em;text-align:left}
+h1,h2,h3{font-family:var(--serif);font-weight:400;font-variation-settings:"SOFT" 90,"WONK" 1,"opsz" 96;letter-spacing:-0.015em;line-height:1.06;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.slide-title{font-size:clamp(44px,6.5vw,84px);line-height:.98;letter-spacing:-0.03em}
+.slide-title em{font-style:italic;color:var(--p2-ink)}
+.slide-subtitle{font-size:clamp(18px,2.2vw,24px);line-height:1.5;color:var(--ink-soft);max-width:700px}
+.slide-heading{font-size:clamp(30px,3.8vw,50px)}
+.lead{font-size:clamp(16px,1.8vw,20px);line-height:1.6;color:var(--ink-soft);max-width:780px}
+.time{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.badge{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);padding:6px 11px;border-radius:999px;border:1px solid var(--rule-strong);background:color-mix(in srgb,var(--paper-2) 82%,transparent)}
+.meta-row{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.meta-row .item{display:flex;flex-direction:column}
+.meta-row .item b{font-family:var(--serif);font-size:26px;font-weight:400;line-height:1;color:var(--ink)}
+.meta-row .item span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:999px;font-size:13px;font-weight:600;background:var(--p1);color:var(--p1-on);white-space:nowrap}
+.chip-2{background:var(--p2);color:var(--p2-on)}
+.chip-3{background:var(--p3);color:var(--p3-on)}
+.chip-4{background:var(--p4);color:var(--p4-on)}
+.chip-5{background:var(--p5);color:var(--p5-on)}
+.chip-line{background:transparent;border:1px solid var(--rule-strong);color:var(--ink-soft)}
+.bullets{list-style:none;display:flex;flex-direction:column;gap:12px;max-width:820px}
+.bullets li{font-size:clamp(16px,1.8vw,19px);line-height:1.55;padding-left:20px;position:relative;color:var(--ink-soft)}
+.bullets li strong{color:var(--ink);font-weight:700}
+.bullets li::before{content:"";position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--p3-ink);opacity:.9}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;width:100%}
+.card{
+  position:relative;background:color-mix(in srgb,var(--paper-2) 92%,transparent);
+  border:1px solid var(--rule);border-radius:var(--r-xl);padding:18px;
+  box-shadow:0 1px 0 var(--rule),0 26px 50px -38px var(--shadow-deep);
+  overflow:hidden;text-align:left;display:flex;flex-direction:column;gap:7px;
+}
+.card::before{content:"";position:absolute;inset:auto 0 auto 0;top:0;height:6px;background:var(--wash-a);opacity:.9}
+.card.c1::before{background:var(--p1)}.card.c2::before{background:var(--p2)}.card.c3::before{background:var(--p3)}.card.c4::before{background:var(--p4)}
+.card .act{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.card h3{font-size:20px;line-height:1.1}
+.card p{font-size:14px;line-height:1.55;color:var(--ink-soft)}
+.card .swipe{height:36px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--rule);margin-top:2px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;text-align:left}
+.panel{
+  background:color-mix(in srgb,var(--paper-2) 90%,transparent);border:1px solid var(--rule);
+  border-radius:var(--r-lg);padding:20px;box-shadow:0 1px 0 var(--rule),0 26px 50px -38px var(--shadow-deep);
+}
+.panel h3{font-size:19px;margin-bottom:10px}
+.panel ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.panel li{font-size:15px;line-height:1.5;color:var(--ink-soft)}
+.panel li strong{color:var(--ink)}
+.mock-ui{background:color-mix(in srgb,var(--paper-2) 94%,transparent);border:1px solid var(--rule);border-radius:var(--r-lg);padding:18px;text-align:left;box-shadow:0 1px 0 var(--rule)}
+.mock-ui .bar{height:10px;border-radius:999px;background:var(--paper-3);margin-bottom:10px}
+.mock-ui .field{background:var(--p2-veil);border:1px solid var(--rule);border-radius:10px;padding:10px 12px;font-size:14px;margin:10px 0;color:var(--ink-soft)}
+.task{display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:10px 12px;margin-top:7px;font-size:15px}
+.task.done{opacity:.55}
+.task.done span{text-decoration:line-through}
+.task button{background:var(--ink);color:var(--paper);border:none;padding:7px 12px;border-radius:999px;font-weight:600;font-family:var(--sans);cursor:pointer}
+.arch{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr;gap:10px;width:100%;align-items:center}
+.arch-box{background:color-mix(in srgb,var(--paper-2) 92%,transparent);border:1px solid var(--rule);border-radius:var(--r-lg);padding:18px;text-align:left}
+.arch-box h4{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:6px}
+.arch-box p{font-size:13px;line-height:1.55;color:var(--ink-soft)}
+.arrow{display:grid;place-items:center;color:var(--ink-faint);font-size:22px}
+table{width:100%;border-collapse:collapse;text-align:left;background:color-mix(in srgb,var(--paper-2) 92%,transparent);border:1px solid var(--rule);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 1px 0 var(--rule)}
+th,td{padding:11px 14px;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.45}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper-3)}
+td code,code{font-family:var(--mono);font-size:12px;background:var(--paper-3);padding:2px 6px;border-radius:6px;color:var(--ink)}
+.ep-table td:first-child{font-family:var(--mono);font-weight:700;font-size:12px}
+.big-num{font-family:var(--serif);font-size:clamp(48px,6vw,76px);line-height:1;color:var(--ink)}
+.note{font-size:13px;line-height:1.5;color:var(--ink-soft);background:var(--p1-veil);border:1px solid var(--rule);border-radius:12px;padding:10px 14px;text-align:left;max-width:820px}
+.note strong{color:var(--ink)}
+.progress-track{position:fixed;top:0;left:0;right:0;height:3px;background:var(--rule);z-index:1000}
+.progress-bar{height:100%;background:var(--p2-ink);transition:width .3s;width:0%}
+.nav-controls{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;
+  display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:999px;
+  border:1px solid var(--rule);background:color-mix(in srgb,var(--paper-2) 90%,transparent);
+  backdrop-filter:blur(14px);box-shadow:0 18px 40px -24px var(--shadow-deep);
+}
+.nav-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--rule);background:transparent;color:var(--ink-soft);cursor:pointer;font-size:15px}
+.nav-btn:hover{color:var(--ink);background:var(--paper-3)}
+.slide-counter{font-family:var(--mono);font-size:12px;color:var(--ink-soft);min-width:56px;text-align:center;font-variant-numeric:tabular-nums}
+.switcher{
+  position:fixed;left:18px;bottom:18px;z-index:999;display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:999px;border:1px solid var(--rule);
+  background:color-mix(in srgb,var(--paper-2) 90%,transparent);backdrop-filter:blur(14px);
+  box-shadow:0 18px 40px -24px var(--shadow-deep);font-size:11px;
+}
+.switcher .name{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);min-width:86px}
+.swatches{display:flex;gap:6px}
+.swatch{width:22px;height:22px;border-radius:50%;border:2px solid transparent;padding:0;cursor:pointer;box-shadow:0 0 0 1px var(--rule)}
+.swatch[aria-pressed="true"]{border-color:var(--paper-2);box-shadow:0 0 0 2px var(--ink),0 0 0 4px var(--paper-2)}
+.switcher .sep{width:1px;height:18px;background:var(--rule)}
+.mode-toggle{border:1px solid var(--rule);background:transparent;border-radius:999px;height:24px;padding:0 9px;font-size:10px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer}
+.mode-toggle:hover{color:var(--ink);background:var(--paper-3)}
+.complement-dot{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--complement);opacity:.9;box-shadow:0 0 0 1px var(--rule)}
+.hidden-notes{display:none}
+body.show-notes .hidden-notes{display:block}
+@media(max-width:768px){
+  .slide{padding:30px 20px}.slide-title{font-size:42px}.slide-heading{font-size:28px}
+  .grid-4{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}
+  .arch{grid-template-columns:1fr;gap:8px}.arrow{transform:rotate(90deg)}
+  .switcher{left:12px;bottom:74px}.switcher .name{display:none}
+}
+@media(max-width:480px){.grid-4{grid-template-columns:1fr}}
+.animate-fade-up{animation:fadeUp .6s ease-out forwards;opacity:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.animate-stagger>*{opacity:0;animation:fadeUp .5s ease-out forwards}
+.animate-stagger>*:nth-child(1){animation-delay:.05s}
+.animate-stagger>*:nth-child(2){animation-delay:.12s}
+.animate-stagger>*:nth-child(3){animation-delay:.19s}
+.animate-stagger>*:nth-child(4){animation-delay:.26s}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+<div class="slide-deck">
+
+<section class="slide active">
+<div class="dabs" aria-hidden="true"><i style="left:-4%;top:-8%;width:560px;height:360px;background:var(--wash-a)"></i><i style="right:-2%;top:4%;width:420px;height:340px;background:var(--wash-b)"></i><i style="left:36%;bottom:-12%;width:520px;height:320px;background:var(--wash-c)"></i></div>
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">00:00 · Ep 00</span><span class="badge" id="paletteBadge">Plein Air · Garden Hour</span></div>
+<div class="slide-content">
+<p class="eyebrow animate-fade-up">Minikube Project · Ep 00</p>
+<h1 class="slide-title">Four Careers, One <em>Project</em></h1>
+<p class="slide-subtitle">Build a real app. Practice four real jobs. Finish with a project and a CV you own.</p>
+<div class="meta-row">
+<div class="item"><b>14 to 16</b><span>minutes</span></div>
+<div class="item"><b>4</b><span>acts</span></div>
+<div class="item"><b>30+</b><span>skills</span></div>
+<div class="item"><b>1</b><span>small app</span></div>
+</div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Fresh CS graduate, degree but no job yet. You know theory, this course shows what a tech job looks like by doing the work.</p>
+<span class="complement-dot" style="right:12%;bottom:22%;width:14px;height:14px" aria-hidden="true"></span>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">00:00 · Hook</span><span class="badge">A degree is not a job yet</span></div>
+<div class="slide-content">
+<p class="eyebrow">Start here</p>
+<h2 class="slide-heading">You know theory.<br>What does a tech job actually feel like?</h2>
+<ul class="bullets animate-stagger">
+<li><strong>One small app.</strong> <span>Four different jobs, one team.</span></li>
+<li><strong>Do the work,</strong> <span>rather than watch someone else do it.</span></li>
+<li><strong>Finish with proof,</strong> <span>a GitHub project plus a CV full of practiced skills.</span></li>
+</ul>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Keep this short. Promise: portfolio plus CV by the end. Next slide names the four jobs.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">00:40 · The Four Roles</span><span class="badge">Each act is a new job</span></div>
+<div class="slide-content">
+<p class="eyebrow">The four roles</p>
+<h2 class="slide-heading">Every system needs four engineers.</h2>
+<p class="lead">They work on the same app, with different responsibilities.</p>
+<div class="grid-4 animate-stagger">
+<div class="card c1"><span class="act">Act 1 · Mint</span><h3>Software Engineer</h3><p>Write code, test it, package it in containers.</p><div class="swipe" style="background:var(--p1)"></div></div>
+<div class="card c2"><span class="act">Act 2 · Stone</span><h3>Cloud Engineer</h3><p>Plan infrastructure, build VMs, configure them.</p><div class="swipe" style="background:var(--p2)"></div></div>
+<div class="card c3"><span class="act">Act 3 · Apricot</span><h3>DevOps Engineer</h3><p>Run systems on Kubernetes, scale and monitor.</p><div class="swipe" style="background:var(--p3)"></div></div>
+<div class="card c4"><span class="act">Act 4 · River Blue</span><h3>Cybersecurity Engineer</h3><p>Pentest the app, exploit, then fix and harden.</p><div class="swipe" style="background:var(--p4)"></div></div>
+</div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Think of each act as a different engineer joining the team. Each act has a briefing at the start and a review plus CV checkpoint at the end. Start at any act. Only Ep 01 setup is required.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">02:00 · Tour of the App</span><span class="badge">A simple task board</span></div>
+<div class="slide-content">
+<p class="eyebrow">Tour of the app</p>
+<h2 class="slide-heading">The app is a simple task board.</h2>
+<div class="grid-2">
+<div class="panel"><h3>What you will do with it</h3><ul><li><strong>Add features</strong> and tests</li><li><strong>Containerize</strong> the whole stack</li><li><strong>Deploy</strong> to Kubernetes</li><li><strong>Secure</strong> it against real attacks</li></ul></div>
+<div class="mock-ui">
+<div class="eyebrow" style="margin-bottom:8px">Task Board</div>
+<div class="bar"></div><div class="bar" style="width:70%"></div>
+<div class="field">New task: Finish Act 1</div>
+<div class="task"><span>Finish Act 1</span><button>Done</button></div>
+<div class="task done"><span>Learn Docker</span><button>Done</button></div>
+<div class="task"><span>Deploy to Minikube</span><button>Done</button></div>
+</div>
+</div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Show the live UI if you have it running. Point out it is intentionally simple, so the lessons stay on the roles and tools.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">02:00 · Architecture</span><span class="badge">Three parts, nothing fancy</span></div>
+<div class="slide-content">
+<p class="eyebrow">Architecture</p>
+<h2 class="slide-heading">Three parts, nothing fancy.</h2>
+<div class="arch animate-stagger">
+<div class="arch-box"><h4>Frontend</h4><p>HTML, CSS, JavaScript<br>Static page served by Nginx</p></div><div class="arrow">→</div>
+<div class="arch-box"><h4>Backend</h4><p>Python Flask REST API<br>Tasks, health, metrics, search</p></div><div class="arrow">→</div>
+<div class="arch-box"><h4>Database</h4><p>PostgreSQL<br>One tasks table</p></div>
+</div>
+<div class="grid-2" style="margin-top:6px">
+<div class="panel"><h3>Frontend talks to</h3><p style="color:var(--ink-soft);font-size:15px;line-height:1.6">The browser calls the backend API. The backend reads and writes tasks in PostgreSQL. Prometheus scrapes <code>/metrics</code>.</p></div>
+<div class="panel"><h3>You will change</h3><p style="color:var(--ink-soft);font-size:15px;line-height:1.6">Add <code>DELETE</code>, containerize all three parts, run them on Kubernetes, then find and fix a SQL injection.</p></div>
+</div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Name the three boxes out loud. Keep it under 30 seconds, the next slide is the endpoint list.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">02:00 · API Reference</span><span class="badge">A small surface</span></div>
+<div class="slide-content">
+<p class="eyebrow">API reference</p>
+<h2 class="slide-heading">The backend has a small API surface.</h2>
+<table class="ep-table animate-fade-up">
+<tr><th>Method</th><th>Endpoint</th><th>What it does</th></tr>
+<tr><td>GET</td><td><code>/healthz</code>, <code>/readyz</code>, <code>/metrics</code></td><td>Alive check, database check, Prometheus metrics</td></tr>
+<tr><td>GET</td><td><code>/api/tasks</code></td><td>List all tasks</td></tr>
+<tr><td>POST</td><td><code>/api/tasks</code></td><td>Create a task</td></tr>
+<tr><td>PATCH</td><td><code>/api/tasks/&lt;id&gt;</code></td><td>Mark done or not done</td></tr>
+<tr><td>DELETE</td><td><code>/api/tasks/&lt;id&gt;</code></td><td>Delete a task (you will add this)</td></tr>
+<tr><td>GET</td><td><code>/api/tasks/search?q=</code></td><td>Search by title (later hacked, then fixed)</td></tr>
+<tr><td>GET</td><td><code>/api/demo/work</code></td><td>CPU work for autoscaling demos</td></tr>
+</table>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Do not read every row. Highlight DELETE and search, both return later as the vulnerability story.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">04:30 · Act 1</span><span class="badge">Software Engineer · Mint</span></div>
+<div class="slide-content">
+<p class="eyebrow">Act 1 · 04:30</p>
+<h2 class="slide-heading">Act 1: You are a Software Engineer.</h2>
+<p class="lead">Write code, prove it works, package it, automate the checks.</p>
+<ul class="bullets animate-stagger">
+<li><strong>Add <code>DELETE /api/tasks/&lt;id&gt;</code></strong> <span>and the delete button in the UI</span></li>
+<li><strong>Test it with <code>unittest</code> and mocks</strong> <span>so no database is needed</span></li>
+<li><strong>Dockerfiles plus Compose</strong> <span>one command starts the full stack</span></li>
+<li><strong>GitHub Actions on every PR</strong> <span>tests run, images build</span></li>
+</ul>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Git</span><span class="chip chip-2">Docker</span><span class="chip chip-3">Python / Flask</span><span class="chip chip-4">SQL</span><span class="chip chip-5">GitHub Actions</span></div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Each bullet is one episode (2 to 6). End with: these skills go straight into your CV.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">06:00 · Act 2</span><span class="badge">Cloud Engineer · Stone</span></div>
+<div class="slide-content">
+<p class="eyebrow">Act 2 · 06:00</p>
+<h2 class="slide-heading">Act 2: You are a Cloud Engineer.</h2>
+<p class="lead">Plan the machine, then build the same machine twice: local first, cloud second.</p>
+<ul class="bullets animate-stagger">
+<li><strong>Plan it:</strong> <span>CPU, memory, storage, firewall, CIDR, DNS, cost</span></li>
+<li><strong>Provision it:</strong> <span>cloud-init on Multipass, then Terraform on GCP</span></li>
+<li><strong>Configure it:</strong> <span>idempotent Ansible playbook (safe to run twice)</span></li>
+<li><strong>Prove it:</strong> <span>app answers, port 8000 stays closed, <code>terraform destroy</code> at the end</span></li>
+</ul>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Multipass</span><span class="chip chip-2">cloud-init</span><span class="chip chip-3">Ansible</span><span class="chip chip-4">Terraform</span><span class="chip chip-5">GCP</span></div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Stress idempotence and cost safety: budget alert first, destroy last. Ep 10 is optional hands-on without a trial.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">07:30 · Act 3</span><span class="badge">DevOps Engineer · Apricot</span></div>
+<div class="slide-content">
+<p class="eyebrow">Act 3 · 07:30</p>
+<h2 class="slide-heading">Act 3: You are a DevOps Engineer.</h2>
+<p class="lead">Stop the VMs. Move the same app to Kubernetes on your laptop.</p>
+<ul class="bullets animate-stagger">
+<li><strong>Kubernetes on Minikube:</strong> <span>Deployments, Services, ConfigMaps, StatefulSet, PVC</span></li>
+<li><strong>GitOps with ArgoCD:</strong> <span>push a commit, ArgoCD syncs it to the cluster</span></li>
+<li><strong>Scale it:</strong> <span>HPA spins up more pods under load</span></li>
+<li><strong>Observe it:</strong> <span>Prometheus, Grafana dashboard, Alertmanager to Discord</span></li>
+</ul>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Kubernetes</span><span class="chip chip-2">Minikube</span><span class="chip chip-3">ArgoCD</span><span class="chip chip-4">Prometheus + Grafana</span><span class="chip chip-5">Autoscaling</span></div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> This is the biggest act (Eps 11 to 19). Name the namespaces app, monitoring, argocd. GKE at the end is demo only.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">09:00 · Act 4</span><span class="badge">Security · River Blue</span></div>
+<div class="slide-content">
+<p class="eyebrow">Act 4 · 09:00</p>
+<h2 class="slide-heading">Act 4: Attack, then defend.</h2>
+<p class="lead">You are a Cybersecurity Engineer. Think like an attacker first.</p>
+<ul class="bullets animate-stagger">
+<li><strong>Attack:</strong> <span>map the API, find SQL injection in <code>/api/tasks/search</code>, exploit by hand and with sqlmap</span></li>
+<li><strong>Fix:</strong> <span>parameterized query, default-deny NetworkPolicies</span></li>
+<li><strong>Verify:</strong> <span>Semgrep (code), Trivy (images, IaC, secrets), ZAP (live headers)</span></li>
+<li><strong>Second bug:</strong> <span>broken access control (JWT, ownership check) and Sealed Secrets for GitOps</span></li>
+</ul>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Penetration testing</span><span class="chip chip-2">sqlmap</span><span class="chip chip-3">NetworkPolicies</span><span class="chip chip-4">Trivy + ZAP</span></div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Sequence matters: exploit first (20 to 21), fix and scan second (22 to 23), then access control and secrets (24 to 25).</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">10:00 · How It Works</span><span class="badge">Start at any act</span></div>
+<div class="slide-content">
+<p class="eyebrow">How the course works</p>
+<h2 class="slide-heading">Each act is a separate job.</h2>
+<div class="grid-2 animate-stagger">
+<div class="panel"><h3>Each act is a separate job</h3><ul><li><strong>Start with a briefing:</strong> task, goal, done when</li><li><strong>End with a review:</strong> what you did, what came next</li><li><strong>CV checkpoint</strong> you can use on its own</li></ul></div>
+<div class="panel"><h3>Jump ahead safely</h3><ul><li><strong>Solved repo:</strong> <code>act-1</code> to <code>act-4</code> folders</li><li><strong>Skip ahead:</strong> copy the previous act folder</li><li><strong>Your repo:</strong> a fork of the starter repo</li></ul></div>
+</div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Reassure: you can start at any act. Only Ep 01 setup is required for everyone.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">11:30 · What You Need</span><span class="badge">The core path is free</span></div>
+<div class="slide-content">
+<p class="eyebrow">What you need</p>
+<h2 class="slide-heading">What you need.</h2>
+<table class="ep-table animate-fade-up">
+<tr><th>Tool</th><th>Used for</th><th>Cost</th></tr>
+<tr><td>Minikube + Docker</td><td>Kubernetes and containers on your laptop</td><td>Free</td></tr>
+<tr><td>Multipass</td><td>Local VMs for Act 2</td><td>Free</td></tr>
+<tr><td>GitHub + Actions + GHCR</td><td>Fork, CI, publish images</td><td>Free for public repos</td></tr>
+<tr><td>Google Cloud (Ep 10 only)</td><td>Same VM work in the cloud</td><td>Free trial, card required</td></tr>
+<tr><td>Laptop</td><td>macOS or Windows 10/11, 8 GB RAM, 30 GB disk</td><td>Free path for the core course</td></tr>
+</table>
+<p style="font-size:14px;color:var(--ink-soft);max-width:820px">No trial account? Watch Ep 10 and skip the hands-on part. Every GCP step starts with a budget alert and ends with <code>terraform destroy</code>.</p>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Say this before anyone installs anything. The core path costs nothing.</p>
+</div>
+</section>
+
+<section class="slide">
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">13:30 · CV Skills Ledger</span><span class="badge">30+ skills with proof</span></div>
+<div class="slide-content">
+<p class="eyebrow">CV skills ledger</p>
+<h2 class="slide-heading">Your CV grows act by act.</h2>
+<div class="grid-2">
+<div class="panel"><h3>How it works</h3><ul><li>After each episode, <strong>mark the skill</strong> you practiced</li><li>The ledger lives in your repository</li><li>Ep 26 turns it into your finished CV</li></ul></div>
+<div class="panel"><h3>What the ledger tracks</h3><table style="box-shadow:none"><tr><td style="font-family:var(--mono);font-size:12px">Docker</td><td style="color:var(--ink-soft)">Ep 05</td><td style="color:var(--ink-soft)">Containerized a 3-tier app</td></tr><tr><td style="font-family:var(--mono);font-size:12px">Python / Flask</td><td style="color:var(--ink-soft)">Ep 04</td><td style="color:var(--ink-soft)">Added a tested REST endpoint</td></tr></table></div>
+</div>
+<div style="display:flex;gap:16px;align-items:center;max-width:820px"><span class="big-num">30+</span><span style="color:var(--ink-soft);line-height:1.5">skills documented with proof you used them. Each ends in a resume checkpoint you can use on its own.</span></div>
+<p class="hidden-notes note"><strong>Speaker cue:</strong> Show the real ledger file if you can. End with the promise: real work samples, not just watched videos.</p>
+</div>
+</section>
+
+<section class="slide">
+<div class="dabs" aria-hidden="true"><i style="left:-4%;bottom:-10%;width:560px;height:360px;background:var(--wash-b)"></i><i style="right:-2%;top:6%;width:420px;height:320px;background:var(--wash-a)"></i></div>
+<div style="position:absolute;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center"><span class="time">Outro · Next</span><span class="badge">See you there</span></div>
+<div class="slide-content">
+<p class="eyebrow animate-fade-up">Four roles. Four acts. One app.</p>
+<h1 class="slide-title">You will own <em>this work.</em></h1>
+<p class="slide-subtitle">A GitHub project you built, work samples you can point to, and a CV that speaks for itself.</p>
+<div class="panel" style="max-width:760px"><h3>Next: Ep 01 Set up your laptop</h3><p style="color:var(--ink-soft);line-height:1.6;font-size:15px">Git, VS Code, Docker Desktop, Multipass, Minikube on macOS and Windows. Pull the tool images once, then every episode just works.</p></div>
+</div>
+</section>
+
+</div>
+<div class="switcher" id="switcher"></div>
+<div class="nav-controls">
+<button class="nav-btn" onclick="prevSlide()" aria-label="Previous">←</button>
+<span class="slide-counter"><span id="current">1</span> / <span id="total">14</span></span>
+<button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
+</div>
+<script>
+const PALETTES=[
+  {id:"waterlilies",name:"Water Lilies",colors:["#cdb4db","#ffc8dd","#ffafcc","#bde0fe","#a2d2ff"]},
+  {id:"wheatfield",name:"Wheat Field",colors:["#ccd5ae","#e9edc9","#fefae0","#faedcd","#d4a373"]},
+  {id:"argenteuil",name:"Argenteuil",colors:["#f4f1de","#e07a5f","#3d405b","#81b29a","#f2cc8f"]},
+  {id:"giverny",name:"Dusk at Giverny",colors:["#231942","#5e548e","#9f86c0","#be95c4","#e0b1cb"]},
+  {id:"poppyfield",name:"Poppy Field",colors:["#a3a380","#d6ce93","#efebce","#d8a48f","#bb8588"]},
+  {id:"balcony",name:"The Balcony",colors:["#d8e2dc","#ffe5d9","#ffcad4","#f4acb7","#9d8189"]},
+  {id:"sisley",name:"Sisley Sky",colors:["#ffa69e","#faf3dd","#b8f2e6","#aed9e0","#5e6472"]},
+  {id:"renoir",name:"Renoir Umbrellas",colors:["#ffccd5","#ffe0e9","#cde7ff","#d8d3f0","#8aa8c8"]},
+  {id:"morisot",name:"Morisot Garden",colors:["#d9e6d6","#f1efe8","#c9c2d6","#a8b8a0","#8a7f8d"]},
+  {id:"cassatt",name:"Cassatt Boating",colors:["#e8b4b8","#f7ead9","#a8d5d8","#e2c9a8","#6b7f8e"]},
+  {id:"haystacks",name:"Haystacks Dawn",colors:["#ffdfc4","#fdf3d8","#c2d8e8","#b8a9c9","#7a7387"]},
+  {id:"riverbank",name:"Riverbank Mist",colors:["#cdebd7","#f5e8d5","#f2c4a8","#a8c8d8","#5e6b7a"]},
+  {id:"gardenhour",name:"Garden Hour",colors:["#b8d0a8","#f4e8b8","#e8b8d0","#c9d8e8","#6b6a8a"]}
+];
+(function(){
+let current=1;
+const slides=document.querySelectorAll(".slide");
+const total=slides.length;
+document.getElementById("total").textContent=total;
+const params=new URLSearchParams(location.search);
+const root=document.documentElement;
+function applyPalette(palette,mode){
+  root.dataset.palette=palette;root.dataset.mode=mode;
+  document.documentElement.classList.toggle("dark",mode==="night");
+  const badge=document.getElementById("paletteBadge");
+  if(badge) badge.textContent="Plein Air \u00b7 Garden Hour";
+  const toggle=document.querySelector(".mode-toggle");
+  if(toggle)toggle.textContent=mode==="night"?"Day":"Night";
+}
+function mountSwitcher(){
+  const host=document.getElementById("switcher");
+  if(!host) return;
+  applyPalette("gardenhour","night");
+}
+function showSlide(n){
+  if(n<1)n=1;if(n>total)n=total;current=n;
+  slides.forEach(function(s,i){s.classList.toggle("active",i===n-1)});
+  document.getElementById("current").textContent=n;
+  document.getElementById("progressBar").style.width=(n/total*100)+"%";
+}
+window.nextSlide=function(){showSlide(current+1)};
+window.prevSlide=function(){showSlide(current-1)};
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();nextSlide()}
+  if(e.key==="ArrowLeft"){e.preventDefault();prevSlide()}
+  if(e.key.toLowerCase()==="n"){document.body.classList.toggle("show-notes")}
+});
+let startX=null;
+document.addEventListener("touchstart",function(e){startX=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",function(e){
+  if(startX===null)return;
+  const dx=e.changedTouches[0].clientX-startX;
+  if(dx<-50)nextSlide();if(dx>50)prevSlide();startX=null;
+},{passive:true});
+mountSwitcher();
+showSlide(1);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="waterlilies" data-mode="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plein Air Palettes for Ep 00, Decision Sheet</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+@font-face{font-family:"Fraunces";src:url("./fonts/Fraunces[SOFT,WONK,opsz,wght].ttf") format("truetype-variations");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Karla";src:url("./fonts/Karla[wght].ttf") format("truetype-variations");font-weight:200 800;font-display:swap}
+@font-face{font-family:"Spline Sans Mono";src:url("./fonts/SplineSansMono[wght].ttf") format("truetype-variations");font-weight:300 700;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Karla",system-ui,sans-serif;color:var(--ink);background-color:var(--paper);line-height:1.55;padding:32px}
+h1{font-family:"Fraunces",Georgia,serif;font-weight:400;letter-spacing:-0.02em;font-size:40px}
+.eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:20px}
+.card{border:1px solid var(--rule);border-radius:20px;padding:18px;background:color-mix(in srgb,var(--paper-2) 92%,transparent);box-shadow:0 20px 40px -28px var(--shadow-deep)}
+.card h3{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:400}
+.card .paint{font-family:"Spline Sans Mono",monospace;font-size:11px;color:var(--ink-soft);margin-top:4px}
+.swatches{display:flex;border-radius:10px;overflow:hidden;margin:14px 0;box-shadow:inset 0 0 0 1px var(--rule)}
+.swatches span{flex:1;height:46px}
+.link{display:inline-block;margin-top:10px;font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--accent-ink)}
+a{color:inherit}
+.mini{margin-top:12px;font-size:14px;color:var(--ink-soft)}
+.mini strong{color:var(--ink);font-family:"Fraunces",Georgia,serif;font-size:20px}
+</style>
+</head>
+<body>
+<p class="eyebrow">Plein Air · Ep 00 · 13 palettes</p>
+<h1>Decision sheet: same deck, thirteen papers</h1>
+<p style="max-width:700px;color:var(--ink-soft);margin-top:10px">Each card shows the five pigments. Click Open deck to see the full 14 slides in that palette. Day and Night are built into every set. The seven originals come from ~/branding. The six new ones were built with the same tokens/build.py rules and pass the 4.5:1 gate.</p>
+<div class="grid" id="grid"></div>
+<script>
+const PALETTES=[
+  {id:"waterlilies",name:"Water Lilies",painting:"Monet, Water Lilies, 1906",colors:["#cdb4db","#ffc8dd","#ffafcc","#bde0fe","#a2d2ff"]},
+  {id:"wheatfield",name:"Wheat Field",painting:"Pissarro, Haymaking, 1887",colors:["#ccd5ae","#e9edc9","#fefae0","#faedcd","#d4a373"]},
+  {id:"argenteuil",name:"Argenteuil",painting:"Monet, Regatta at Argenteuil, 1872",colors:["#f4f1de","#e07a5f","#3d405b","#81b29a","#f2cc8f"]},
+  {id:"giverny",name:"Dusk at Giverny",painting:"Monet, The Artist's Garden at Giverny, 1900",colors:["#231942","#5e548e","#9f86c0","#be95c4","#e0b1cb"]},
+  {id:"poppyfield",name:"Poppy Field",painting:"Monet, Poppy Field, 1873",colors:["#a3a380","#d6ce93","#efebce","#d8a48f","#bb8588"]},
+  {id:"balcony",name:"The Balcony",painting:"Caillebotte, The Balcony, 1880",colors:["#d8e2dc","#ffe5d9","#ffcad4","#f4acb7","#9d8189"]},
+  {id:"sisley",name:"Sisley Sky",painting:"Sisley, The Loing at Moret, 1892",colors:["#ffa69e","#faf3dd","#b8f2e6","#aed9e0","#5e6472"]},
+  {id:"renoir",name:"Renoir Umbrellas",painting:"Renoir, Dance at the Moulin, 1876",colors:["#ffccd5","#ffe0e9","#cde7ff","#d8d3f0","#8aa8c8"]},
+  {id:"morisot",name:"Morisot Garden",painting:"Morisot, In the Dining Room, 1886",colors:["#d9e6d6","#f1efe8","#c9c2d6","#a8b8a0","#8a7f8d"]},
+  {id:"cassatt",name:"Cassatt Boating",painting:"Cassatt, The Boating Party, 1893",colors:["#e8b4b8","#f7ead9","#a8d5d8","#e2c9a8","#6b7f8e"]},
+  {id:"haystacks",name:"Haystacks Dawn",painting:"Monet, Haystacks, 1890",colors:["#ffdfc4","#fdf3d8","#c2d8e8","#b8a9c9","#7a7387"]},
+  {id:"riverbank",name:"Riverbank Mist",painting:"Monet, Rouen Cathedral, 1893",colors:["#cdebd7","#f5e8d5","#f2c4a8","#a8c8d8","#5e6b7a"]},
+  {id:"gardenhour",name:"Garden Hour",painting:"Monet, The Artist's Garden, 1900",colors:["#b8d0a8","#f4e8b8","#e8b8d0","#c9d8e8","#6b6a8a"]}
+];
+document.getElementById("grid").innerHTML=PALETTES.map(function(p){
+  const sw=p.colors.map(function(c){return '<span style="background:'+c+'"></span>'}).join("");
+  return '<article class="card" data-palette="'+p.id+'"><h3>'+p.name+'</h3><div class="paint">'+p.painting+'</div><div class="swatches">'+sw+'</div><div class="mini"><strong>Four Careers, One <em>Project</em></strong><br>Build a real app. Practice four real jobs. Finish with a project and a CV you own.</div><a class="link" href="ep00-four-careers-one-project.html?p='+p.id+'&mode=day">Open deck in this palette →</a></article>';
+}).join("");
+</script>
+</body>
+</html>

@@ -9,7 +9,7 @@
 | Task | Move the app from one VM to Kubernetes. Make delivery and monitoring automatic. |
 | Goal | Deploy to Minikube, scale on load, publish images from CI, deliver changes with Git, and alert on failures. |
 | Done when | The app scales from 2 to 6 replicas under load. ArgoCD syncs it from Git. Grafana shows a dashboard. Discord receives an alert. |
-| Start here | Fork the starter repository. Copy `act-2-cloud-engineer/` from the `solved` branch into your fork. Keep the starter `tools/` and `observability/` folders. Install Docker Desktop and Minikube. You do not need Multipass or GCP. |
+| Start here | Fork the starter repository. Copy the contents of `act-2-cloud-engineer/` from the `solved` branch to the root of your fork, not the folder itself. Replace files that have the same name. Do not replace the starter `tools/` and `observability/` folders. Install Docker Desktop and Minikube. You do not need Multipass or GCP. |
 
 Try each task first. Open **Show solution** for that task only when you are stuck. The last line in each solution links to the `solved` branch. Use that link as a last resort.
 
@@ -762,7 +762,7 @@ Last resort: [open the solved Act 3 folder](https://github.com/aliAljaffer/four-
 
 #### Task 15: Create the Grafana Secret
 
-Create the Secret that ArgoCD cannot read from Git. `app-db` already exists from Episode 13. This task creates `grafana-admin` only. Replace `choose-a-password` with your own password.
+Create the Secret that ArgoCD cannot read from Git. `app-db` already exists: you created it by hand in [Task 9](#task-9-create-the-namespace-and-the-database-secret), so its password never enters Git. This task creates `grafana-admin` only. Replace `choose-a-password` with your own password.
 
 <details>
 <summary>Show solution</summary>
@@ -1142,7 +1142,7 @@ gcloud container clusters create-auto gke-demo --region us-central1
 gcloud container clusters get-credentials gke-demo --region us-central1
 ```
 
-The demo needs the images that Episode 16 published to GHCR. Local images from `minikube image load` do not exist on GKE. If you skipped Episode 16, publish the images first or use another registry.
+The demo needs the images that the [Task 13 publish workflow](#task-13-write-the-publish-workflow) pushed to GHCR. GKE pulls images from a registry; it cannot see images on your laptop. Local images from `minikube image load` do not exist on GKE. If you skipped Episode 16, publish the images first or use another registry.
 
 Apply the same `kubernetes/app/` manifests: the Namespace, the Deployments, the Services, the Postgres StatefulSet, the ConfigMaps, and the Secrets. Change the frontend Service from `type: NodePort` to `type: LoadBalancer` for this demo. Change each `image:` value to the published image. Then:
 

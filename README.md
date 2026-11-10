@@ -23,7 +23,7 @@ Each act guide gives you the task first. Open **Show solution** only for the tas
 
 - Each act opens with a briefing: what happened before, your task, and what "done" means.
 - Each act ends with a review and a resume checkpoint: the skills you can now add to your CV.
-- To skip ahead, fork the starter repository first. Then copy the previous act's folder from the `solved` branch into your fork. Each act doc says which folder.
+- To skip ahead, fork the starter repository first. Then copy the contents of the previous act's folder from the `solved` branch to the root of your fork, not the folder itself. Replace files that have the same name. Each act doc says which folder. To get the files, open the `solved` branch on GitHub and select **Code**, then **Download ZIP**.
 - An act folder contains the app at the end of that act. It does not contain the tool services that a later act adds. Keep `tools/` from your fork.
 - Everyone needs the Episode 1 setup.
 

@@ -32,7 +32,7 @@ Note: Some steps fail if you skipped an optional part. For example, `multipass d
    docker compose -f tools/compose.yaml run --rm terraform destroy -auto-approve
    ```
 
-5. Delete the GKE demo cluster:
+5. Delete the [[gcp/gke|GKE]] demo cluster:
 
    ```shell
    gcloud container clusters delete gke-demo --region us-central1 --quiet

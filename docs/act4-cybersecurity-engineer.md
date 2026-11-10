@@ -9,9 +9,63 @@
 | Task | The backend ships a search endpoint that builds SQL from user input, nobody has tested it, and no part of the app checks who is allowed to change what. |
 | Goal | Think and act like an attacker to find the SQL injection, then switch hats and fix it, prove the fix with automated scans, find and fix a second real flaw, and put the app's secrets safely in Git. |
 | Done when | `sqlmap` finds nothing on the fixed endpoint, a Pod without an allow rule cannot reach the database, Semgrep, Trivy, and ZAP all run clean or with recorded findings, one user can no longer modify another's task, and every secret the app needs is a committed `SealedSecret`. |
-| Start here | Fork the starter repository. Copy `act-3-devops-engineer/` from the `solved` branch into your fork. Keep the starter `tools/` folder. Install Docker Desktop and Minikube. You need a second Minikube profile for the policy check in Episode 22. |
+| Start here | Fork the starter repository. Copy the contents of `act-3-devops-engineer/` from the `solved` branch to the root of your fork, not the folder itself. Replace files that have the same name. Do not replace the starter `tools/` folder. Install Docker Desktop and Minikube. You need a second Minikube profile for the policy check in Episode 22. |
 
 Try each task first. Open **Show solution** for that task only when you are stuck. The last line in each solution links to the `solved` branch. Use that link as a last resort.
+
+### If you skipped Act 3
+
+Every task in this act runs against the task board inside a Minikube cluster, in the `app` namespace. Act 3 builds that cluster. Do these steps once, from the root of your fork, after you copy the contents of `act-3-devops-engineer/`. You do not need ArgoCD or the monitoring stack for this act.
+
+1. Copy two files from the starter repository into your fork: `kubernetes/sealed-secrets/controller.yaml` and `kubernetes/app/07-networkpolicy.yaml`. The act-3 snapshot does not include them.
+
+2. Start Minikube with Calico. Calico enforces the NetworkPolicies that you write in Episode 22. The default network plugin ignores them without an error. Act 3 does this in [Task 1](act3-devops-engineer.md#task-1-start-the-cluster).
+
+   ```shell
+   minikube start --driver=docker --cni=calico --cpus=6 --memory=6144
+   minikube addons enable metrics-server
+   ```
+
+3. Change the images to local tags. The snapshot points at the course's published GHCR images. This act rebuilds the backend and frontend on your laptop, so the cluster must run your local builds.
+   - In `kubernetes/app/03-postgres.yaml`, set the `postgres` container image to `tutorial-database:local`.
+   - In `kubernetes/app/04-deployments.yaml`, set the `frontend` container image to `tutorial-frontend:local`.
+   - In the same file, set the `backend` container image to `tutorial-backend:local`.
+
+4. Build the images and load them into Minikube. Minikube has its own container runtime. It cannot see the images in Docker Desktop until you copy them in with `minikube image load`. Act 3 does this in [Task 8](act3-devops-engineer.md#task-8-build-and-load-the-local-images).
+
+   ```shell
+   docker build -t tutorial-frontend:local ./frontend
+   docker build -t tutorial-backend:local ./backend
+   docker build -t tutorial-database:local ./database
+   minikube image load tutorial-frontend:local
+   minikube image load tutorial-backend:local
+   minikube image load tutorial-database:local
+   ```
+
+5. Create the namespace and the database Secret. Keep the username `tutorial`. Replace `choose-a-password` with your own password. You create the Secret by hand so that the password never enters Git. Episode 25 replaces it with a `SealedSecret`. Act 3 does this in [Task 9](act3-devops-engineer.md#task-9-create-the-namespace-and-the-database-secret).
+
+   ```shell
+   minikube kubectl -- apply -f kubernetes/app/namespace.yaml
+   minikube kubectl -- create secret generic app-db -n app --from-literal=username=tutorial --from-literal=password=choose-a-password --dry-run=client -o yaml | minikube kubectl -- apply -f -
+   ```
+
+6. Apply the app manifests. Warning: do not apply `07-networkpolicy.yaml` yet. It denies all traffic until Episode 22 adds the allow rules. Act 3 does this in [Task 10](act3-devops-engineer.md#task-10-apply-the-manifests).
+
+   ```shell
+   minikube kubectl -- apply -n app -f kubernetes/app/01-configmap.yaml
+   minikube kubectl -- apply -n app -f kubernetes/app/02-services.yaml
+   minikube kubectl -- apply -n app -f kubernetes/app/03-postgres.yaml
+   minikube kubectl -- apply -n app -f kubernetes/app/04-deployments.yaml
+   minikube kubectl -- apply -n app -f kubernetes/app/05-hpa.yaml
+   ```
+
+7. Check that every Pod is `Running`:
+
+   ```shell
+   minikube kubectl -- get pods -n app
+   ```
+
+Without ArgoCD, nothing applies your manifest changes for you. In Task 38, apply `kubernetes/app/04-deployments.yaml` with `minikube kubectl -- apply -n app -f` before you restart the backend.
 
 ## What a Cybersecurity Engineer does
 
@@ -59,8 +113,6 @@ You find and fix a SQL injection in the backend you built in Act 1, harden the K
 
 You write everything else: the fixed search query, pentest notes, the app-specific NetworkPolicy allow rules (ingress and egress, port and label values; the default-deny and DNS rules are already there), a Semgrep rule, a security scan workflow, the Nginx security headers, real users with bcrypt and JWT, the ownership check, and the sealed `app-db` and `app-auth` secrets.
 
-If you start Act 4 from the `act-3-devops-engineer/` folder, copy two files from the starter repository into your fork. Copy `kubernetes/sealed-secrets/controller.yaml` and `kubernetes/app/07-networkpolicy.yaml`. The act-3 snapshot does not include them.
-
 Compare your work with `act-4-cybersecurity-engineer/` in the `solved` branch.
 
 ## Pull the new images
@@ -100,7 +152,7 @@ Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-
 
 #### Task 3: Build and load sqlmap
 
-`sqlmap` has no official image. Build it once, then load it into Minikube, the same way you load the app images in Act 3.
+`sqlmap` has no official image. Build it once, then load it into Minikube. Minikube cannot see the images in Docker Desktop, so `minikube image load` copies the image into the cluster. Act 3 loads the app images the same way in [Task 8](act3-devops-engineer.md#task-8-build-and-load-the-local-images).
 
 <details>
 <summary>Show solution</summary>
@@ -118,7 +170,7 @@ Last resort: [open the solved sqlmap Dockerfile](https://github.com/aliAljaffer/
 
 #### Task 4: Start the port-forward
 
-Keep the port-forward running in its own terminal, for the manual `curl` commands only. It is the same pattern Episode 18 used for Prometheus. If port 8000 is in use, forward to 18000 and use 18000 in the curl URLs.
+Keep the port-forward running in its own terminal, for the manual `curl` commands only. `kubectl port-forward` opens a tunnel from `127.0.0.1` on your laptop to a Service inside the cluster. Act 3 uses the same pattern for Prometheus in [Task 19](act3-devops-engineer.md#task-19-deploy-and-check-prometheus). If port 8000 is in use, forward to 18000 and use 18000 in the curl URLs.
 
 <details>
 <summary>Show solution</summary>
@@ -127,7 +179,7 @@ Keep the port-forward running in its own terminal, for the manual `curl` command
 minikube kubectl -- port-forward service/backend -n app 8000:8000
 ```
 
-`sqlmap` and ZAP do not use this port-forward. Both run as Pods inside the cluster. `sqlmap` reaches the backend at `backend.app.svc.cluster.local:8000`, the same Service name Prometheus already scrapes. ZAP reaches the frontend at `frontend.app.svc.cluster.local:80`, because the checks in Episode 23 are response headers, and those come from Nginx.
+`sqlmap` and ZAP do not use this port-forward. Both run as Pods inside the cluster. `sqlmap` reaches the backend at `backend.app.svc.cluster.local:8000`, the backend Service's in-cluster DNS name. Inside the cluster, every Service has the name `<service>.<namespace>.svc.cluster.local`. Prometheus scrapes the same name in Act 3, [Task 18](act3-devops-engineer.md#task-18-add-prometheus-scrape-targets). ZAP reaches the frontend at `frontend.app.svc.cluster.local:80`, because the checks in Episode 23 are response headers, and those come from Nginx.
 
 Last resort: [open the solved Act 4 folder](https://github.com/aliAljaffer/four-hats/tree/solved/act-4-cybersecurity-engineer)
 
@@ -180,7 +232,7 @@ Install Burp Suite Community Edition on the host. Point your browser's proxy at 
 <details>
 <summary>Show solution</summary>
 
-Burp Suite Community Edition is a GUI intercepting proxy. It cannot run headless in a container for this interactive step, so install it on the host, the same way you installed VS Code and Docker Desktop in Episode 1. Set Burp's proxy listener to `127.0.0.1:8080`. Point the browser at it. Open the frontend, create a task, search for it, mark it done, delete it. Open Burp's site map.
+Burp Suite Community Edition is a GUI intercepting proxy. It cannot run headless in a container for this interactive step, so install it on the host, the same way you installed VS Code and Docker Desktop in [Setup](00-setup.md#macos) ([Windows](00-setup.md#windows-1011)): download the installer and run it on your laptop, not in a container. Set Burp's proxy listener to `127.0.0.1:8080`. Point the browser at it. Open the frontend, create a task, search for it, mark it done, delete it. Open Burp's site map.
 
 The requests to find: `GET /`, `GET /api/tasks`, `POST /api/tasks`, `PATCH /api/tasks/<id>`, and `GET /api/tasks/search`.
 
@@ -356,7 +408,7 @@ minikube kubectl -- rollout restart deployment/backend -n app
 minikube kubectl -- rollout status deployment/backend -n app
 ```
 
-Wait for the rollout to finish. Re-run the boolean and UNION `curl` commands from Episode 21. Both must return an empty list. Re-run the `sqlmap` Pod from Episode 21 against the same URL. `sqlmap` must report that the parameter is not injectable. Do not run `sqlmap` through Compose against `host.docker.internal`. `kubectl port-forward` listens on `127.0.0.1` only.
+Wait for the rollout to finish. Re-run the boolean and UNION `curl` commands from [Task 9](#task-9-confirm-with-a-boolean-payload) and [Task 10](#task-10-extract-data-with-union). Both must return an empty list. Re-run the `sqlmap` Pod from [Task 11](#task-11-automate-with-sqlmap) against the same URL. `sqlmap` must report that the parameter is not injectable. Do not run `sqlmap` through Compose against `host.docker.internal`. `kubectl port-forward` listens on `127.0.0.1` only.
 
 Last resort: [open the solved backend/app.py](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/backend/app.py)
 
@@ -779,7 +831,7 @@ The backend service in `compose.yaml`:
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
 ```
 
-Episode 5 copied `.env` from `.env.example`. If you change only the example, your `.env` does not change. Compose reads the variable from `.env` only when the service lists it.
+Act 1 copied `.env` from `.env.example` in [Episode 5, Task 5](act1-software-engineer.md#task-5-copy-the-environment-file). If you skipped Act 1, run `cp .env.example .env` once. If you change only the example, your `.env` does not change. Compose reads the variable from `.env` only when the service lists it.
 
 Last resort: [open the solved .env.example](https://github.com/aliAljaffer/four-hats/blob/solved/act-4-cybersecurity-engineer/.env.example)
 
@@ -1102,7 +1154,7 @@ Add the test imports, the token helper, the auth header helper, and a test that 
 <details>
 <summary>Show solution</summary>
 
-First update the two Act 1 tests to send the auth header:
+First update the two delete tests from Act 1, [Episode 4, Task 3](act1-software-engineer.md#task-3-add-two-tests), to send the auth header. `DELETE` now needs a logged-in user, so without the header both tests get a 401:
 
 ```python
 def test_delete_task_returns_deleted_task(self):
@@ -1208,7 +1260,7 @@ Last resort: [open the solved controller.yaml](https://github.com/aliAljaffer/fo
 
 #### Task 34: Seal app-db
 
-Seal `app-db` with the username `tutorial` and a random password. Keep the username from Episode 13. A different username creates a role that PostgreSQL does not have.
+Seal `app-db` with the username `tutorial` and a random password. Keep the username `tutorial` that Act 3 used for the hand-made Secret in [Task 9](act3-devops-engineer.md#task-9-create-the-namespace-and-the-database-secret). A different username creates a role that PostgreSQL does not have.
 
 <details>
 <summary>Show solution</summary>
