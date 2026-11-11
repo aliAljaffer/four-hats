@@ -29,6 +29,7 @@ def connect_to_database():
         user=os.getenv("DB_USER", "tasks"),
         password=os.environ["DB_PASSWORD"],
         connect_timeout=3,
+        options="-c statement_timeout=5000",
         row_factory=dict_row,
     )
 

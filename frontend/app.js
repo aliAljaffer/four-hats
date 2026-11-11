@@ -6,6 +6,7 @@ const statusMessage = document.querySelector("#status");
 async function request(path, options = {}) {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json" },
+    signal: AbortSignal.timeout(10000),
     ...options,
   });
   const result = await response.json();
